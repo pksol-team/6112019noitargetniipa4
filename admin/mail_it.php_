@@ -1,0 +1,82 @@
+<?php
+include 'config.php';
+
+session_start();
+if($_SESSION['password']==''){
+	echo "<script>window.location='login.php'</script>";
+}
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+
+
+
+require 'PHPMailer/src/Exception.php';
+require 'PHPMailer/src/PHPMailer.php';
+require 'PHPMailer/src/SMTP.php';
+ $mail_data = mysqli_query($conn,"select * from `mail` ORDER BY mail_id ASC LIMIT 1");
+while($data_mail  = mysqli_fetch_assoc($mail_data)){
+	 $main_order_id= $data_mail['main_order_id'];
+	$order_data = mysqli_query($conn,"select * from `order_data` where `id`='$main_order_id'");
+	$data_order= mysqli_fetch_assoc($order_data);
+	 $buyer_email = $data_order['buyer_email'];
+	$order_no = $data_order['sales_r_no'];
+	
+	$company_id = $data_order['company_id'];
+	$company_data = mysqli_query($conn,"select * from `company`where `id`='$company_id'");
+	$data_company= mysqli_fetch_assoc($company_data);
+	$company_name = $data_company['name'];
+	
+
+$mail = new PHPMailer;
+//Tell PHPMailer to use SMTP
+$mail->isSMTP();
+//Enable SMTP debugging
+// 0 = off (for production use)
+// 1 = client messages
+// 2 = client and server messages
+$mail->SMTPDebug = 2;
+//Set the hostname of the mail server
+$mail->Host = 'mail.appzito.com';
+//Set the SMTP port number - likely to be 25, 465 or 587
+$mail->Port = 25;
+//Whether to use SMTP authentication
+$mail->SMTPAuth = true;
+//Username to use for SMTP authentication
+$mail->Username = 'demo@appzito.com';
+//Password to use for SMTP authentication
+$mail->Password = '@@@111';
+//Set who the message is to be sent from
+$mail->setFrom('demo@appzito.com', 'First Last');
+//Set an alternative reply-to address
+$mail->addReplyTo('demo@appzito.com', 'First Last');
+//Set who the message is to be sent to
+$mail->addAddress('demo@appzito.com', 'John Doe');
+//Set the subject line
+$mail->Subject = 'PHPMailer SMTP test';
+//Read an HTML message body from an external file, convert referenced images to embedded,
+//convert HTML into a basic plain-text alternative body
+$mail->msgHTML('hellow');
+//Replace the plain text body with one created manually
+$mail->AltBody = 'This is a plain-text message body';
+//Attach an image file
+ if(file_get_contents($order_no.'-'.'invoceprint.pdf')){
+//$mail->AddAttachment($order_no.'-'.'invoceprint.pdf'); 
+}     
+if(!$mail->Send()) 
+   {
+    echo "Mailer Error: " . $mail->ErrorInfo;
+   } 
+else 
+  {
+  echo "Message sent!";
+  //unlink($order_no.'-'.'invoceprint.pdf');
+ // mysqli_query($conn,"delete from `mail` where `main_order_id`='$main_order_id'");
+ }
+
+ $mail=null;
+}
+
+
+
+ ?>

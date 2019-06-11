@@ -1,0 +1,515 @@
+.btn-group.open>.dropdown-menu {
+    position: absolute;
+     top: -52px;
+    left: -205px;
+	width:200px;
+	overflow:auto;
+}
+									.flowingdown {
+    width:100px;
+    
+    height:50px;
+    float:left;
+    margin-top:2px;
+    margin-bottom:2px;
+   
+    transition: height 1s;
+    -webkit-transition: height 1s;
+}
+.flowingdown:hover {
+    height:100%;
+}
+									.itemtitle1 {
+									width:160px;	
+									
+									    overflow: hidden;
+									}
+									.statuss {
+    width: 70px;
+}
+									.selectst{
+										width:230px;
+									}
+									
+									.custom-select {
+  position: relative;
+  font-family: Arial;
+}.btn.red:not(.btn-outline) {
+    color: #fff;
+    background-color: #f31827;
+    border-color: #ec2835;
+}
+.btn.red1:not(.btn-outline) {
+    color: #fff;
+    background-color: #e7505a;
+    border-color: #e7505a;
+}
+.btn.blue:not(.btn-outline) {
+    color: #FFF;
+    background-color: #1f5082;
+    border-color: #3598dc;
+}
+
+.btn.blue1:not(.btn-outline) {
+    color: #FFF;
+    background-color: #3598dc;
+    border-color: #3598dc;
+}
+.table a{
+										color: #000000;
+									}
+									.table a:hover{
+										color: #000000;
+										text-decoration:none;
+									}
+									b{
+										color:26a1ab;
+									}
+									.tooltip1 {
+  position: relative;
+  display: inline-block;
+ 
+  color:black;
+}
+.b11{
+	color:black;
+}
+.tooltip1 .light {
+  visibility: hidden;
+ display:none;
+  position: absolute;
+  z-index: 1000;
+width: 536px;
+  opacity: 2;
+  transition: opacity 0.3s;
+}
+@media (min-width: 992px){
+.tooltip1 .col-md-12 {
+       width: 450px;
+	color:black;
+}
+.col-md-8 {
+     width: 100%; 
+}
+}
+
+.tooltip1 .light::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+ 
+}
+.custome_hr {
+    border: 26;
+    border-top: 3px solid #564c4c;
+    border-bottom: 0;
+}
+.margin30{
+	margin-top:-8px;
+	margin-bottom:-12px;
+}
+.tooltip1:hover .light {
+  visibility: visible;
+  opacity: 2;
+  display:block;
+}
+
+/* The popup form - hidden by default */
+.form-popup {
+      display: none;
+    position: absolute;
+    top: 0;
+    right: 15px;
+    border: 3px solid #f1f1f1;
+    z-index: 999;
+    background-color: white;
+}
+
+/* Add styles to the form container */
+.form-container {
+  max-width: 300px;
+  padding: 10px;
+  background-color: white;
+}
+
+/* Full-width input fields */
+.form-container input[type=text], .form-container input[type=password] {
+  width: 100%;
+  padding: 15px;
+  margin: 5px 0 22px 0;
+  border: none;
+  background: #f1f1f1;
+}
+
+/* When the inputs get focus, do something */
+.form-container input[type=text]:focus, .form-container input[type=password]:focus {
+  background-color: #ddd;
+  outline: none;
+}
+
+/* Set a style for the submit/login button */
+.form-container .btn {
+  background-color: #4CAF50;
+  color: white;
+  padding: 16px 20px;
+  border: none;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom:10px;
+  opacity: 0.8;
+}
+
+/* Add a red background color to the cancel button */
+.form-container .cancel {
+  background-color: red;
+}
+
+/* Add some hover effects to buttons */
+.form-container .btn:hover, .open-button:hover {
+  opacity: 1;
+}	
+
+.fltr{
+	width:200px;
+	max-width:250px;
+}
+#mainform{
+width:960px;
+margin:20px auto;
+padding-top:20px;
+font-family: 'Fauna One', serif;
+display:block;
+}
+h2{
+margin-left: 65px;
+text-shadow:1px 0px 3px gray;
+}
+h3{
+font-size:18px;
+text-align:center;
+text-shadow:1px 0px 3px gray;
+}
+#onclick{
+padding:3px;
+color:green;
+
+
+cursor:pointer;
+padding:5px 5px 5px 15px;
+width:70px;
+color:white;
+background-color:#123456;
+box-shadow:1px 1px 5px grey;
+border-radius:3px;
+}
+b{
+font-size:18px;
+
+}
+#popup{
+padding-top:80px;
+}
+
+
+
+#addnote{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#addnote_dispatch{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#addnote_progress{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#logindiv{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+#tooltiphover{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+#despatch_1{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+#logindiv_progress{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+
+#logindiv1{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+#logindiv_progress_1{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+#despatch_2{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+
+#logindiv2{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#despatch_3{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#logindiv_progress_2{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+
+#importform{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+#addusertab1{
+opacity:1;
+position: absolute;
+top: 0px;
+left: 0px;
+height: 2000px;
+width: 100%;
+background: #000000ba;
+display: none;
+z-index:1000;
+}
+
+
+
+
+
+.filterdiv{
+	top:0px;
+	padding-top:200px;
+	padding-bottom:300px;
+	width:500px;
+}
+.green1{
+	width:30px;
+	height:30px;
+	color:white;
+	background-color:#239b56;
+}
+.truck{
+	width:30px;
+	height:30px;
+	color:white;
+	background-color:#e83b3b;
+}
+.notee{
+	width:30px;
+	height:30px;
+	color:white;
+	background-color:#1f5082;
+}
+.table-scrollable{
+	overflow-y: scroll;
+}
+.paddingleft{
+	padding-left:14px;
+}
+.margintop{
+	margin-bottom:-10px;
+}
+@media (min-width: 992px){
+.col-md-1 {
+    width: 0.33333%;
+}
+}
+
+
+.tooltip1note .lightnote {
+  visibility: hidden;
+ display:none;
+  position: absolute;
+  z-index: 1000;
+  width: 90px;
+  opacity: 2;
+  transition: opacity 0.3s;
+}
+
+.tooltip1note .lightnote::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+ 
+}
+.custome_hr {
+    border: 26;
+    border-top: 3px solid #564c4c;
+    border-bottom: 0;
+}
+
+.tooltip1note:hover .lightnote {
+  visibility: visible;
+  opacity: 2;
+  display:block;
+}
+.static-info .name {
+    font-size: 12px;
+}.static-info .value {
+    font-size: 12px;
+    font-weight: 600;
+}@media (min-width: 992px){
+.tooltip1 .col-md-12 {
+    width: 527px;
+    color: black;
+}
+}
+@media (min-width: 992px){
+	.col-md-8 {
+    width: 100%;
+}
+}
+.width-md-6{
+	width:35%;
+}
+
+@media (min-width: 992px){
+.col-md-4 {
+    width: 49.33333%;
+}
+}
+@media (min-width: 992px){
+.container-fluid {
+     padding-left: 15px;
+     padding-right: 15px; 
+}
+}
+.filterdiv .col-md-4{
+	width:33.33%;
+}
+.filterdiv .col-md-8 {
+    width: 100%;
+}.table-scrollable {
+    overflow-y: scroll;
+    overflow-x: scroll;
+    max-height: 500px;
+}.table-scrollable .dataTable td .btn-group, .table-scrollable .dataTable th .btn-group {
+    position: relative;
+    margin-top: -2px;
+}

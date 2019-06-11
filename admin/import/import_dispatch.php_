@@ -1,0 +1,224 @@
+
+<html><meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1">
+<?php
+
+
+ $allowed =  array('xlsb','xlsx','xls','xlm','xlt','xlsm','xltx','xltm','xla','xlsb','xll','xlam','xlw','csv');
+$filename1 = $_FILES['file']['name'];
+$ext = pathinfo($filename1, PATHINFO_EXTENSION);
+if(!in_array($ext,$allowed) ) {
+    echo "<script>window.location='../c_order_view.php'; alert('not valied file!');</script>";
+}
+
+error_reporting(0);
+ini_set('display_errors', TRUE);
+ini_set('display_startup_errors', TRUE);
+
+define('EOL',(PHP_SAPI == 'cli') ? PHP_EOL : '<br />');
+
+
+
+
+/** Include PHPExcel_IOFactory */
+require_once dirname(__FILE__) . '/Classes/PHPExcel/IOFactory.php';
+
+
+$objPHPExcel = $_FILES['file']['tmp_name'];
+
+    if(!file_exists($objPHPExcel))
+	{
+		$error='File Not Found';
+		printf("<script>location.href='index.php?message=$error'</script>");
+		exit;	
+    }	
+    $file = fopen($objPHPExcel,"r");
+	chmod($objPHPExcel,0777);
+	if(!$file)
+	{
+		echo "Error opening data file.\n";
+		exit;
+    }
+$allowed =  array('xls','csv','xlsx');
+$filename = $_FILES['file']['name'];
+$ext = pathinfo($filename, PATHINFO_EXTENSION);
+if(!in_array($ext,$allowed) ) {
+	unlink($filename);
+    echo 'Invalid File';
+	exit;
+}
+
+
+$inputFileName = $_FILES['file']['tmp_name'];
+
+//  Read your Excel workbook
+try {
+    $inputFileType = PHPExcel_IOFactory::identify($inputFileName);
+    $objReader = PHPExcel_IOFactory::createReader($inputFileType);
+    $objPHPExcel = $objReader->load($inputFileName);
+} catch(Exception $e) {
+    die('Error loading file "'.pathinfo($inputFileName,PATHINFO_BASENAME).'": '.$e->getMessage());
+}
+
+//  Get worksheet dimensions
+$sheet = $objPHPExcel->getSheet(0); 
+$highestRow = $sheet->getHighestRow(); 
+$highestColumn = $sheet->getHighestColumn();
+include("config.php");
+//  Loop through each row of the worksheet in turn
+for ($row = 1; $row <= $highestRow; $row++){ 
+    //  Read a row of data into an array
+	
+	if($row==1)
+	{
+		continue;
+	}
+    $rowData1 = $sheet->rangeToArray('A' . $row . ':' . $highestColumn . $row,
+                                    NULL,
+                                    TRUE,
+                                    FALSE);
+									
+				$rowData=$rowData1[0];				
+
+
+
+echo date_format($date,"Y/m/d H:i:s");
+$company_id = $_POST['company_name'];
+$exceltype = $_POST['exceltype'];
+$channel = $_POST['channel'];
+//----------------------------------------------------filtering---------------------------------------------------------
+if($exceltype=='ebay'){
+	
+	//uploading eBay data	
+	
+	$data0=$rowData[0];
+$data1=$rowData[1];
+$data2=$rowData[2];
+$data3=$rowData[3];
+$data4=$rowData[4];
+$data5=$rowData[5];
+$data6=$rowData[6];
+$data7=$rowData[7];
+$data8=$rowData[8];
+$data9=$rowData[9];
+$data10=$rowData[10];
+$data11=$rowData[11];
+$data12=$rowData[12];
+$data13=$rowData[13];
+ $data14=$rowData[14];
+
+echo $data15 =$rowData[15];
+
+$data16=$rowData[16];
+$data17=$rowData[17];
+$data18=$rowData[18];
+$data19=$rowData[19];
+$data20=$rowData[20];
+$data21=$rowData[21];
+$data22=date('Y-m-d', strtotime($rowData[22]));
+$data23=date('Y-m-d', strtotime($rowData[23]));
+$data24=date('Y-m-d', strtotime($rowData[24]));
+$data25=date('Y-m-d', strtotime($rowData[25]));
+$data26=date('Y-m-d', strtotime($rowData[26]));
+$data27=$rowData[27];
+$data28=$rowData[28];
+$data29=$rowData[29];
+$data30=$rowData[30];
+$data31=$rowData[31];
+$data32=$rowData[32];
+$data33=$rowData[33];
+$data34=$rowData[34];
+$data35=$rowData[35];
+$data36=$rowData[36];
+$data37=$rowData[37];
+$data38=$rowData[38];
+$data39=$rowData[39];
+ //$data40=$rowData[40];//order_id
+ $data41=$rowData[41];
+$data42=$rowData[42];
+$data43=$rowData[43];
+$data44=$rowData[44];
+$data45=$rowData[45];
+$data46=$rowData[46];
+$data47=$rowData[47];
+$data48=$rowData[48];
+$data49=$rowData[49];
+$data50=$rowData[50];
+$data51=$rowData[51];
+if($data0==''){}else{
+$check_o_id = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$data0'");
+		$data_ceck_o = mysqli_fetch_assoc($check_o_id);
+		if($data_ceck_o['sales_r_no'] == $data0){
+			echo "already stored!"."<br>";
+			
+ mysqli_query($conn,"INSERT INTO `order_data`(`company_id`,`channel_id`, `sales_r_no`, `user_id`, `buyer_name`, `buyer_phone`, `buyer_email`, `buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `item_no`, `item_title`, `custom_label`, `quantity`, `sale_price`, `included_vat_rate`, `postage_packing`, `insurance`, `cash_on_delivery`, `total_price`, `payment_method`, `sale_date`, `checkout_date`, `paid_on_date`, `dispatch_date`, `invoice_date`, `invoice_number`, `feedback_left`, `feedback_received`, `notes`, `unique_product_id`, `private_field`, `productid_type`, `productid_value`, `product_value_2`, `paypal_id`, `delivery_service`, `cash_on_delivery_option`, `transaction_id`, `variation`, `global_shipping_program`, `global_shipping_references`, `click_collect`, `click_collect_reference`, `post_address_1`, `post_address_2`, `post_city`, `post_county`, `post_postcode`, `post_country`, `ebay_plus`,`status`,`mearge`) VALUES ('$company_id','$channel','$data0','$data1','$data2','$data3','$data4','$data5','$data6','$data7','$data8','$data9','$data10','$data11','$data12','$data13','$data14','$data15','$data16','$data17','$data18','$data19','$data20','$data21','$data22','$data23','$data24','$data25','$data26','$data27','$data28','$data29','$data30','$data31','$data32','$data33','$data34','$data35','$data36','$data37','$data38','$data39','$data41','$data42','$data43','$data44','$data45','$data46','$data47','$data48','$data49','$data50','$data51','$data52','new','mearged')");
+ $order_id11 = mysqli_insert_id($conn);
+ mysqli_query($conn,"insert into `order_data_mearge` (`order_id`,`order_no`)values('$order_id11','$data0')");
+			mysqli_query($conn,"update `order_data` set `mearge`='mearged' where `sales_r_no`='$data0'");
+			
+		}else{
+
+ mysqli_query($conn,"INSERT INTO `order_data`(`company_id`,`channel_id`, `sales_r_no`, `user_id`, `buyer_name`, `buyer_phone`, `buyer_email`, `buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `item_no`, `item_title`, `custom_label`, `quantity`, `sale_price`, `included_vat_rate`, `postage_packing`, `insurance`, `cash_on_delivery`, `total_price`, `payment_method`, `sale_date`, `checkout_date`, `paid_on_date`, `dispatch_date`, `invoice_date`, `invoice_number`, `feedback_left`, `feedback_received`, `notes`, `unique_product_id`, `private_field`, `productid_type`, `productid_value`, `product_value_2`, `paypal_id`, `delivery_service`, `cash_on_delivery_option`, `transaction_id`, `variation`, `global_shipping_program`, `global_shipping_references`, `click_collect`, `click_collect_reference`, `post_address_1`, `post_address_2`, `post_city`, `post_county`, `post_postcode`, `post_country`, `ebay_plus`,`status`) VALUES ('$company_id','$channel','$data0','$data1','$data2','$data3','$data4','$data5','$data6','$data7','$data8','$data9','$data10','$data11','$data12','$data13','$data14','$data15','$data16','$data17','$data18','$data19','$data20','$data21','$data22','$data23','$data24','$data25','$data26','$data27','$data28','$data29','$data30','$data31','$data32','$data33','$data34','$data35','$data36','$data37','$data38','$data39','$data41','$data42','$data43','$data44','$data45','$data46','$data47','$data48','$data49','$data50','$data51','$data52','new')");
+
+		}
+}
+ }else{ 
+	
+//uploading amazon data	
+	
+	if($rowData[0]==''){}else{
+	
+$order_id=$rowData[0];
+$order_item_id=$rowData[1]; //item_no
+$purchase_date=date('d-m-Y H:i:s', strtotime($rowData[2]));//paid_on_date
+$payments_date=date('d-m-Y H:i:s', strtotime($rowData[3]));
+$reporting_date=date('d-m-Y H:i:s', strtotime($rowData[4]));
+$promise_date=date('d-m-Y H:i:s', strtotime($rowData[5]));
+$days_past_promise=$rowData[6];
+$buyer_email=$rowData[7];
+$buyer_name=$rowData[8];
+
+$buyer_number=$rowData[9];//buyer_phone
+$sku=$rowData[10];
+$product_name=$rowData[11];//item_title
+$quantity_purchased=$rowData[12];//quantity
+$quantity_shipped=$rowData[13];
+$quantity_to_ship=$rowData[14];
+$ship_service_level=$rowData[15];
+$recipient_name=$rowData[16];
+$ship_address =  $rowData[17];//buyer_address_1
+$ship_address2 =  $rowData[18].$rowData[19];//buyer_address_2
+
+$ship_city=$rowData[20];//buyer_town
+$ship_state=$rowData[21];//buyer_county
+$ship_postal_code=$rowData[22];
+$ship_country=$rowData[23];
+$is_business_order=$rowData[24];
+$purchase_order_no=$rowData[25];
+$price_designation=$rowData[26];
+		 
+		$check_o_id = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$order_id'");
+		$data_ceck_o = mysqli_fetch_assoc($check_o_id);
+		if($data_ceck_o['sales_r_no'] == $order_id){
+			echo "already stored!"."<br>";
+			
+			mysqli_query($conn,"INSERT INTO `order_data`( `company_id`,`channel_id`, `sales_r_no`, `item_no`, `paid_on_date`, `payments_date`, `reporting_date`, `promise_date`, `days_past_promise`, `buyer_email`, `buyer_name`, `buyer_phone`, `sku`, `item_title`, `quantity`, `quantity_shipped`, `quantity_to_ship`, `ship_service_level`, `recipient_name`,`buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `ship_postal_code`, `ship_country`, `is_business_order`, `purchase_order_no`, `price_designation`,`status`,`mearge`) VALUES ('$company_id','$channel','$order_id','$order_item_id','$purchase_date','$payments_date','$reporting_date','$promise_date','$days_past_promise','$buyer_email','$buyer_name','$buyer_number','$sku','$product_name','$quantity_purchased','$quantity_shipped','$quantity_to_ship','$ship_service_level','$recipient_name','$ship_address','$ship_address2','$ship_city','$ship_state','$ship_postal_code','$ship_country','$is_business_order','$purchase_order_no','$price_designation','new','mearged')");
+			$order_id1 = mysqli_insert_id($conn);
+ mysqli_query($conn,"insert into `order_data_mearge` (`order_id`,`order_no`)values('$order_id1','$order_id')");
+ 
+			mysqli_query($conn,"update `order_data` set `mearge`='mearged' where `sales_r_no`='$order_id'");
+			
+			
+		}else{
+mysqli_query($conn,"INSERT INTO `order_data`( `company_id`,`channel_id`, `sales_r_no`, `item_no`, `paid_on_date`, `payments_date`, `reporting_date`, `promise_date`, `days_past_promise`, `buyer_email`, `buyer_name`, `buyer_phone`, `sku`, `item_title`, `quantity`, `quantity_shipped`, `quantity_to_ship`, `ship_service_level`, `recipient_name`,`buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `ship_postal_code`, `ship_country`, `is_business_order`, `purchase_order_no`, `price_designation`,`status`) VALUES ('$company_id','$channel','$order_id','$order_item_id','$purchase_date','$payments_date','$reporting_date','$promise_date','$days_past_promise','$buyer_email','$buyer_name','$buyer_number','$sku','$product_name','$quantity_purchased','$quantity_shipped','$quantity_to_ship','$ship_service_level','$recipient_name','$ship_address','$ship_address2','$ship_city','$ship_state','$ship_postal_code','$ship_country','$is_business_order','$purchase_order_no','$price_designation','new')");
+	
+		}
+}
+       
+ 
+
+}
+}
+
+echo "<script>window.location='../c_order_view.php'</script>";
+?>
+</html>

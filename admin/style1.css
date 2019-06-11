@@ -1,0 +1,92 @@
+/* reset */
+body{
+	
+  font-family: Calibri ;
+	
+}
+
+
+/* heading */
+
+
+
+/* table */
+
+
+
+/* page */
+
+html {  overflow: auto; }
+html { background: #999; cursor: default; }
+
+body {  box-sizing: border-box;  margin: 0 auto; overflow: hidden;  width:21cm; }
+body { background: #FFF; border-radius: 1px; box-shadow: 0 0 1in -0.25in rgba(0, 0, 0, 0.5); }
+
+/* header */
+
+
+@media print {
+	* { -webkit-print-color-adjust: exact; }
+	html { background: none; padding: 0; }
+	body { box-shadow: none; margin: 0; }
+.cccc{
+	page-break-after:always;
+}
+}
+
+@page { margin: 0; }
+.fix{
+	display:block;
+	
+	
+	
+	width:21cm;
+}
+.main{
+          width: 204mm;
+    display: block;
+  
+   height:100%;
+    margin-left: 5mm;
+}
+.block{
+	    display: block;
+    width: 98mm;
+    height: 57mm;
+	
+    float: left;
+  
+    position: relative;
+	
+}
+.address1{
+	display:block;
+	width:92mm;
+	height:42mm;
+	
+	
+	
+}
+.address2{
+	display:block;
+	width:92mm;
+	height:11mm;
+	text-align:right;
+	
+	font-size:10px;
+	
+}
+.add{
+	display:block;
+	width:70mm;
+	height:44mm;
+	float:left;
+	
+}
+.img{
+	display:block;
+	width:22mm;
+	height:39mm;
+	float:right;
+	
+}
