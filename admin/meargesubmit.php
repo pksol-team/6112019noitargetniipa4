@@ -6,11 +6,15 @@ if($_SESSION['password']==''){
 	
 }
 $company_order_id = $_POST['company_order_id']; //first orderid data
+
 $company_first_id = $company_order_id[0];
+
 
 $status = $_GET['status'];//shipped inprogress new
 $data_first_order=mysqli_query($conn,"select * from `order_data` where `id`='$company_first_id'");
+
 $order_first_data = mysqli_fetch_assoc($data_first_order);
+
 $order_no = mysqli_real_escape_string($conn,$order_first_data['sales_r_no']);
 $sku_first_order = mysqli_real_escape_string($conn,$order_first_data['sku']);
 $item_title_first_order = mysqli_real_escape_string($conn,$order_first_data['item_title']);
@@ -27,13 +31,31 @@ $st = mysqli_real_escape_string($conn,$order_first_data['status']);
 
 
 if(!empty($buyer_name_first_order) and !empty($sku_first_order) and !empty($item_no_first_order) and !empty($item_title_first_order)){
-	mysqli_query($conn,"insert into `order_data` (`company_id`,`channel_id`,`sales_r_no`,`item_no`,`item_title`,`quantity`,`sku`,`status`,`mearge`,`sale_price`,`shipping_cost`,`postage_packing`,`sale_date`)values('$company_id_first_order','$channel_id_first_order','$order_no','$item_no_first_order','$item_title_first_order','$quantity_first_order','$sku_first_order','$status','mearged','$sale_price_first_order','$shipping_cost_first_order','$postage_packing_first_order','$sale_date_first_order')");
+	
+	mysqli_query($conn,"insert into `order_data` 
+		(`company_id`,`channel_id`,`sales_r_no`,
+		`item_no`,`item_title`,`quantity`,`sku`,
+		`status`,`mearge`,`sale_price`,`shipping_cost`,
+		`postage_packing`,`sale_date`)
+		values('$company_id_first_order','$channel_id_first_order',
+		'$order_no','$item_no_first_order','$item_title_first_order',
+		'$quantity_first_order','$sku_first_order','$status','mearged',
+		'$sale_price_first_order','$shipping_cost_first_order',
+		'$postage_packing_first_order','$sale_date_first_order')");
 
-	mysqli_query($conn,"update `order_data` set  `postage_packing`='',`sale_price`='',`sku`='',`item_no`='',`shipping_cost`='',`item_title`='',`quantity`='',`status`='$status',`mearge`='mearged',`total_price`='',`sale_date`='$sale_date_first_order',`company_id`='$company_id_first_order',`channel_id`='$channel_id_first_order' where `id`='$company_first_id'");
+	mysqli_query($conn,"update `order_data` set  `postage_packing`='',
+		`sale_price`='',`sku`='',`item_no`='',`shipping_cost`='',
+		`item_title`='',`quantity`='',`status`='$status',`mearge`='mearged',
+		`total_price`='',`sale_date`='$sale_date_first_order',
+		`company_id`='$company_id_first_order',
+		`channel_id`='$channel_id_first_order' where `id`='$company_first_id'");
 }
 
-	mysqli_query($conn,"update `order_data` set `quantity`='',`mearge`='mearged' where `id`='$company_first_id' ");
-	mysqli_query($conn,"update `order_data` set `mearge`='mearged' where `sales_r_no`='$order_no' and `company_id`='$company_id_first_order'");
+
+	mysqli_query($conn,"update `order_data` set `quantity`='',
+		`mearge`='mearged' where `id`='$company_first_id' ");
+	mysqli_query($conn,"update `order_data` set `mearge`='mearged' 
+		where `sales_r_no`='$order_no' and `company_id`='$company_id_first_order'");
 //end
 $company_ids = array_slice($company_order_id,1);
 foreach($company_ids as $company_order_id1){

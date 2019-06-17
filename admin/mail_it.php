@@ -12,6 +12,8 @@ require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
  $mail_data = mysqli_query($conn,"select * from `mail` where `status`='' ORDER BY mail_id desc LIMIT 15");
+
+
 while($data_mail  = mysqli_fetch_assoc($mail_data)){
 	 $main_order_id= $data_mail['main_order_id'];
 	 $sales_r_no11= $data_mail['sales_r_no'];

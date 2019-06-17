@@ -352,6 +352,11 @@
 										$('#user_name').focus();
 									}
 									
+									
+
+
+
+
 								function mearge_new(){
 									var result = confirm("Want to Merge?");
 if (result) {
@@ -432,6 +437,7 @@ if (result) {
 										document.getElementById('form3').submit();
 									}
 									//jobsheet////end////
+									
 									
 									//picking_list
 									function PackingListNew(){

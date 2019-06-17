@@ -4,7 +4,8 @@ session_start();
 if($_SESSION['password']==''){
 	echo "<script>window.location='login.php'</script>";
 }
-$company_order_id = $_POST['company_order_id'];
+ $company_order_id = $_POST['company_order_id'];
+
 $file=fopen("Export.csv","w+") or exit("Unable to open file!");
 
 

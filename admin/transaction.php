@@ -138,9 +138,6 @@ dfsd
 <li>
 <a href="#tab_1_2" data-toggle="tab"> <b>In Progress </b></a>
 </li>
-<li>
-<a href="#tab_1_3" data-toggle="tab"> <b>Merged Orders </b></a>
-</li>
 
 
 </ul>
@@ -184,7 +181,7 @@ dfsd
 <div class="btn-group"><button style="font-size:9.1px;" onclick="ReceiptNew();" id="sample_editable_1_new" class="btn btn-warning">10 Per Sheet</button></div>
 <div class="btn-group"><button style="font-size:9.1px;" onclick="JobSheetNew();" id="sample_editable_1_new" class="btn red">Packing List</button></div>
 <div class="btn-group"><button style="font-size:9.1px;" onclick="PackingListNew();" id="sample_editable_1_new" class="btn blue">Picking List</button></div>
-
+<div class="btn-group"><a href="transaction.php"><button style="font-size:9.1px;" id="sample_editable_1_new" class="btn red">Orders To be Transaction</button></a></div>
 <div class="btn-group ">
 <select  style="font-size:12px;"  class="form-control fltr" name="filter_name" id="filter_name" onchange="run(this.value);">
 <option>Filter</option>
@@ -806,55 +803,6 @@ echo $data_user1['uname'];
 
 <!-- tab 3 start-->
 
-<div class="tab-pane fade active in" id="tab_1_3">
-	<form  method="post" id="form1" name="print" action="/">
-	<div id="selectstatus"></div>
-	<table style="font-size: 12px;" class="table table-striped table-bordered table-hover table-checkable order-column" id="sample_1">
-	<thead  style="font-size: 12px;">
-	<tr>
-	
-
-	<th style="font-size:12px;">ID</th>
-	<th style="font-size:12px;">Total Orders</th>
-	<th style="font-size:12px;">Address</th>
-	<th style="font-size:12px;">Postal Code</th>
-
-
-
-	</tr>
-	</thead>
-	<tbody>
-
-	<?php 
-
-	$getTrasaction = mysqli_query($conn, "SELECT * FROM transaction");
-	if(mysqli_fetch_row($getTrasaction) > 0){
-		$i = 1;
-		while ($transaction = mysqli_fetch_array($getTrasaction)) {
-
-			?>
-				<tr>
-					<td><?php echo $i ?></td>
-					<td><?php 
-						$orders = trim($transaction['order_id'], '[]');
-						$orderCount = explode(',', $orders);
-						echo count($orderCount); 
-					?></td>
-					<td><?php echo $transaction['address'] ?></td>
-					<td><?php echo $transaction['post_code'] ?></td>
-				</tr>
-			<?php
-			$i++;
-		}
-	}
-
-	 ?>
-
-	</tbody>
-	</table>
-	</form>
-</div>
-
 </div>
 <!-- END EXAMPLE TABLE PORTLET-->
 </div>
@@ -912,10 +860,8 @@ echo $data_user1['uname'];
 <script>
 
 
-	function order_transaction() {
-		console.log("test")
-	}	  
-		  
+ 			  
+				  
 				
 </script>
 <style>

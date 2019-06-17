@@ -8,6 +8,7 @@ if($_SESSION['password']==''){
 $company_order_id = $_POST['company_order_id'];
 
 
+
 //$company_order_id1 = $company_order_id[0];
 require('dompdf/autoload.inc.php');
 use Dompdf\Dompdf;
@@ -25,8 +26,11 @@ $html .='<div style="border-bottom:2px solid #bbb; margin-left:5px; margin-right
 $html .='<center><h2>Invoice</h2></center>';
 
 $html .='</div>';
+// client old query
+// select * from `order_data` where `id`='$company_order_id1'
+$order_data = mysqli_query($conn,"SELECT * FROM `order_data` WHERE id = ".$company_order_id1."");
 
-$order_data = mysqli_query($conn,"select * from `order_data` where `id`='$company_order_id1'");
+
 $data_order = mysqli_fetch_assoc($order_data);
 $company_id = $data_order['company_id'];
 $order_no = $data_order['sales_r_no'];
@@ -291,7 +295,8 @@ $dompdf->setPaper('A4', 'portrait');
 // Render the HTML as PDF
 $dompdf->render();
  $output = $dompdf->output();
-$check_mail_data = mysqli_query($conn,"select * from `mail` where `sales_r_no`='$order_no' ");
+// $check_mail_data = mysqli_query($conn,"select * from `mail` where `sales_r_no`='$order_no' ");
+$check_mail_data = mysqli_query($conn,"SELECT * FROM mail WHERE slaes_r_no=".$order_no."");
 $data_mail_check = mysqli_fetch_assoc($check_mail_data);
 
 if($order_no == $data_mail_check['sales_r_no']){
