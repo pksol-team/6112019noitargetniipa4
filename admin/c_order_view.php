@@ -138,9 +138,9 @@ dfsd
 <li>
 <a href="#tab_1_2" data-toggle="tab"> <b>In Progress </b></a>
 </li>
-<li>
+<!-- <li>
 <a href="#tab_1_3" data-toggle="tab"> <b>Merged Orders </b></a>
-</li>
+</li> -->
 
 
 </ul>
@@ -806,6 +806,9 @@ echo $data_user1['uname'];
 
 <!-- tab 3 start-->
 
+
+
+<?php /*
 <div class="tab-pane fade active in" id="tab_1_3">
 	<form  method="post" id="form1" name="print" action="/">
 	<div id="selectstatus"></div>
@@ -854,6 +857,8 @@ echo $data_user1['uname'];
 	</table>
 	</form>
 </div>
+
+*/ ?>
 
 </div>
 <!-- END EXAMPLE TABLE PORTLET-->
