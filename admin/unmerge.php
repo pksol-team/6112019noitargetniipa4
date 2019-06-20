@@ -1,11 +1,13 @@
 <?php
 include 'config.php';
 session_start();
-if($_SESSION['password']==''){
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
 	echo "<script>window.location='login.php'</script>";
 }
 
 $company_order_id = $_POST['company_order_id'];
+
 
 foreach($company_order_id as $company_order_id1){
 	//get data from First Order
@@ -42,10 +44,17 @@ foreach($company_order_id as $company_order_id1){
 		mysqli_query($conn,"update `order_data` set `mearge`='' where `sales_r_no`='$order_no' and `company_id`='$company_id' and `sale_date`='$sale_date'");
 			}
 }
-if($st=='shipped' or $st=='Shipped'){
-	echo "<script>window.location='dispatch.php'</script>";
-	
-}else{
-echo "<script>window.location='c_order_view.php'</script>";
+
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
+
+	if($st=='shipped' or $st=='Shipped') {
+		echo "<script>window.location='dispatch.php'</script>";
+	} else {
+		echo "<script>window.location='c_order_view.php'</script>";
+	}
+
 }
+
+
 ?>

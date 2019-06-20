@@ -166,95 +166,164 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 					}
 				}
 			}
-            
+
          
         }
-    }
+	}
 
+
+	$unique_sql = "
+	SELECT
+		* 
+	FROM
+		order_data 
+	WHERE
+		buyer_address_1 IN ( SELECT * FROM ( SELECT buyer_address_1 FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_address_1 HAVING COUNT( buyer_address_1 ) > 1 ) AS a ) 
+		AND buyer_name IN ( SELECT * FROM ( SELECT buyer_name FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_name HAVING COUNT( buyer_name ) > 1 ) AS a ) 
+		AND buyer_postcode IN ( SELECT * FROM ( SELECT buyer_postcode FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_postcode HAVING COUNT( buyer_postcode ) > 1 ) AS a ) 
+		AND buyer_postcode <> 'WS13 8UR' 
+
+		AND buyer_address_1 <> '' 
+		AND buyer_name <> '' 
+		AND buyer_postcode <> '' 
+
+	GROUP BY
+		buyer_postcode
+	";
+
+	$unique_records = mysqli_query($conn, $unique_sql);
+
+
+	while($unique_row = mysqli_fetch_assoc($unique_records)) {
+
+		$buyer_name = $unique_row['buyer_name'];
+		$buyer_address = $unique_row['buyer_address_1'];
+		$buyer_postcode = $unique_row['buyer_postcode'];
+		$status = $unique_row['status'];
+
+		$each_unique_sql = "
+			SELECT
+				GROUP_CONCAT(id) as ids
+			FROM
+				order_data 
+				WHERE
+				buyer_name = '".$buyer_name."'
+				AND 
+				buyer_address_1 = '".$buyer_address."'
+				AND 
+				buyer_postcode = '".$buyer_postcode."'
+				AND
+				mearge <> 'hide' 
+				AND
+				status = 'new'
+		";
+
+		$each_unique = mysqli_query($conn, $each_unique_sql);
+
+		$ids = explode(',', mysqli_fetch_assoc($each_unique)['ids']);
+
+		$ch = curl_init();
+
+		curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/meargesubmit.php?status=".$status."&type=curl");
+		curl_setopt($ch, CURLOPT_POST, 1);
+
+		// In real life you should use something like:
+		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $ids)));
+
+		// Receive server response ...
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+		$server_output = curl_exec($ch);
+
+		curl_close ($ch);
+
+	}
 
 
 
 
 /******************* Merging orders for transaction *****************************/
 
+		
 
-            $getNewOrders = mysqli_query($conn, "
-    				SELECT *
-    				FROM order_data
-    				WHERE buyer_address_1 IN (SELECT *
-    				                       FROM (SELECT buyer_address_1
-    				                             FROM order_data
-    				                             WHERE status = 'new'
-    				                             GROUP BY buyer_address_1
-    				                             HAVING COUNT(buyer_address_1) > 1)
+
+            // $getNewOrders = mysqli_query($conn, "
+    		// 		SELECT *
+    		// 		FROM order_data
+    		// 		WHERE buyer_address_1 IN (SELECT *
+    		// 		                       FROM (SELECT buyer_address_1
+    		// 		                             FROM order_data
+    		// 		                             WHERE status = 'new'
+    		// 		                             GROUP BY buyer_address_1
+    		// 		                             HAVING COUNT(buyer_address_1) > 1)
     				                          
-    				                       AS a)
-    				AND buyer_postcode <> 'WS13 8UR'
+    		// 		                       AS a)
+    		// 		AND buyer_postcode <> 'WS13 8UR'
 
-    				AND buyer_postcode IN (SELECT *
-    				                       FROM (SELECT buyer_postcode
-    				                             FROM order_data
-    				                             WHERE status = 'new'
-    				                             GROUP BY buyer_postcode
-    				                             HAVING COUNT(buyer_postcode) > 1)
+    		// 		AND buyer_postcode IN (SELECT *
+    		// 		                       FROM (SELECT buyer_postcode
+    		// 		                             FROM order_data
+    		// 		                             WHERE status = 'new'
+    		// 		                             GROUP BY buyer_postcode
+    		// 		                             HAVING COUNT(buyer_postcode) > 1)
     				                          
-    				                       AS a)
-            	");
+    		// 		                       AS a)
+            // 	");
 
-            if(mysqli_num_rows($getNewOrders) > 0){     
+            // if(mysqli_num_rows($getNewOrders) > 0){     
 
-            	$orderIdArray = '';   	
+            // 	$orderIdArray = '';   	
     	        
-    	        while ($newOrder = mysqli_fetch_array($getNewOrders)) {
+    	    //     while ($newOrder = mysqli_fetch_array($getNewOrders)) {
 
-    	        	// check if post code and address already exist in transaction table
-    	        	$checkTable = mysqli_query($conn, "SELECT * FROM transaction WHERE address = '".$newOrder['buyer_address_1']."' AND post_code = '".$newOrder['buyer_postcode']."'");
+    	    //     	// check if post code and address already exist in transaction table
+    	    //     	$checkTable = mysqli_query($conn, "SELECT * FROM transaction WHERE address = '".$newOrder['buyer_address_1']."' AND post_code = '".$newOrder['buyer_postcode']."'");
 
-    	        	if (mysqli_num_rows($checkTable) > 0) {
+    	    //     	if (mysqli_num_rows($checkTable) > 0) {
     	        		
-    	        		$data = mysqli_fetch_assoc($checkTable);
+    	    //     		$data = mysqli_fetch_assoc($checkTable);
 
-    	        		if(!strpos($data['order_id'], $newOrder['id']) !== false){
+    	    //     		if(!strpos($data['order_id'], $newOrder['id']) !== false){
     	        			
-    		        		$transactionID = $data['id'];
+    		//         		$transactionID = $data['id'];
     		        		
-    		        		$oldOrderId = trim($data['order_id'],'[]');
+    		//         		$oldOrderId = trim($data['order_id'],'[]');
 
-    		        		$updateOrderId = '['.$oldOrderId.','.$newOrder['id'].']';
+    		//         		$updateOrderId = '['.$oldOrderId.','.$newOrder['id'].']';
 
-    		        		mysqli_query($conn, "UPDATE transaction SET order_id = '".$updateOrderId."' WHERE id = ".$transactionID."");
+    		//         		mysqli_query($conn, "UPDATE transaction SET order_id = '".$updateOrderId."' WHERE id = ".$transactionID."");
     		        		
-    	        		}
+    	    //     		}
 
     	        	
-    	        	}else{
-    		        	if ($orderIdArray) {
+    	    //     	}else{
+    		//         	if ($orderIdArray) {
 
-    		        		echo $orderIdArray;
-    		        		$orderIdArray = $orderIdArray.','.$newOrder['id'];
+    		//         		echo $orderIdArray;
+    		//         		$orderIdArray = $orderIdArray.','.$newOrder['id'];
     		        		
-    		        	}else{
+    		//         	}else{
     		        		
-    		        		$orderIdArray = $newOrder['id'];
+    		//         		$orderIdArray = $newOrder['id'];
 
-    		        	}
+    		//         	}
     		        
-    		        	$orderAddress = $newOrder['buyer_address_1'];
+    		//         	$orderAddress = $newOrder['buyer_address_1'];
 
-    		        	$orderPostCode = $newOrder['buyer_postcode'];
+    		//         	$orderPostCode = $newOrder['buyer_postcode'];
     	        		
-    			        $orderIdArray = '['.$orderIdArray.']';
+    		// 	        $orderIdArray = '['.$orderIdArray.']';
 
-    			        mysqli_query($conn, "INSERT INTO `transaction`(`address`, `order_id`, `post_code`) VALUES ('".$orderAddress."', '".$orderIdArray."', '".$orderPostCode."')");
-    	        	}
+    		// 	        mysqli_query($conn, "INSERT INTO `transaction`(`address`, `order_id`, `post_code`) VALUES ('".$orderAddress."', '".$orderIdArray."', '".$orderPostCode."')");
+    	    //     	}
 
-    	        	$orderIdArray = '';
+    	    //     	$orderIdArray = '';
 
-    	        }
+    	    //     }
 
-            }else{
-            	echo "no data";
-            }
+            // }else{
+            // 	echo "no data";
+            // }
 
 
 

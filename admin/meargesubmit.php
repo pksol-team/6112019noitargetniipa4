@@ -1,10 +1,17 @@
 <?php
 include 'config.php';
 session_start();
-if($_SESSION['password']==''){
-	echo "<script>window.location='login.php'</script>";
-	
+
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
+
+	if($_SESSION['password']==''){
+		echo "<script>window.location='login.php'</script>";	
+	}
+
 }
+
+
 $company_order_id = $_POST['company_order_id']; //first orderid data
 
 $company_first_id = $company_order_id[0];
@@ -14,6 +21,8 @@ $status = $_GET['status'];//shipped inprogress new
 $data_first_order=mysqli_query($conn,"select * from `order_data` where `id`='$company_first_id'");
 
 $order_first_data = mysqli_fetch_assoc($data_first_order);
+
+
 
 $order_no = mysqli_real_escape_string($conn,$order_first_data['sales_r_no']);
 $sku_first_order = mysqli_real_escape_string($conn,$order_first_data['sku']);
@@ -127,9 +136,15 @@ foreach($company_ids as $company_order_id1){
 	
 	
 }
-if($st=='shipped' or $st=='Shipped'){
-	echo "<script>window.location='dispatch.php'</script>";
-}else{
-echo "<script>window.location='c_order_view.php'</script>";
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
+
+	if($st=='shipped' or $st=='Shipped'){
+		echo "<script>window.location='dispatch.php'</script>";
+	} else {
+		echo "<script>window.location='c_order_view.php'</script>";
+	}
+
 }
+
 ?>
