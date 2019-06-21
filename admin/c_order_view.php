@@ -6,7 +6,77 @@
 	if($_SESSION['password']==''){
 	echo "<script>window.location='login.php'</script>";
 	}
+
+
+	// $unique_sql = "
+	// SELECT
+	// 	* 
+	// FROM
+	// 	order_data 
+	// WHERE
+	// 	buyer_address_1 IN ( SELECT * FROM ( SELECT buyer_address_1 FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_address_1 HAVING COUNT( buyer_address_1 ) > 1 ) AS a ) 
+	// 	AND buyer_name IN ( SELECT * FROM ( SELECT buyer_name FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_name HAVING COUNT( buyer_name ) > 1 ) AS a ) 
+	// 	AND buyer_postcode IN ( SELECT * FROM ( SELECT buyer_postcode FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_postcode HAVING COUNT( buyer_postcode ) > 1 ) AS a ) 
+	// 	AND buyer_postcode <> 'WS13 8UR' 
+
+	// 	AND buyer_address_1 <> '' 
+	// 	AND buyer_name <> '' 
+	// 	AND buyer_postcode <> '' 
+
+	// GROUP BY
+	// 	buyer_postcode
+	// ";
+
+	// $unique_records = mysqli_query($conn, $unique_sql);
+
+
+	// while($unique_row = mysqli_fetch_assoc($unique_records)) {
+
+	// 	$buyer_name = $unique_row['buyer_name'];
+	// 	$buyer_address = $unique_row['buyer_address_1'];
+	// 	$buyer_postcode = $unique_row['buyer_postcode'];
+	// 	$status = $unique_row['status'];
+
+	// 	$each_unique_sql = "
+	// 		SELECT
+	// 			GROUP_CONCAT(id) as ids
+	// 		FROM
+	// 			order_data 
+	// 			WHERE
+	// 			buyer_name = '".$buyer_name."'
+	// 			AND 
+	// 			buyer_address_1 = '".$buyer_address."'
+	// 			AND 
+	// 			buyer_postcode = '".$buyer_postcode."'
+	// 			AND
+	// 			mearge <> 'hide' 
+	// 			AND
+	// 			status = 'new'
+	// 	";
+
+	// 	$each_unique = mysqli_query($conn, $each_unique_sql);
+
+	// 	$ids = explode(',', mysqli_fetch_assoc($each_unique)['ids']);
+
+	// 	$ch = curl_init();
+
+	// 	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/meargesubmit.php?status=".$status."&type=curl");
+	// 	curl_setopt($ch, CURLOPT_POST, 1);
+
+	// 	// In real life you should use something like:
+	// 	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $ids)));
+
+	// 	// Receive server response ...
+	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	// 	$server_output = curl_exec($ch);
+
+	// 	curl_close ($ch);
+
+	// }
 	
+
+
 	// $merged_records_query = mysqli_query($conn, "SELECT GROUP_CONCAT(id) as ids FROM order_data WHERE user_id <> '' AND status = 'new' AND mearge = 'mearged' ");
 	
 	// $ids = explode(',', mysqli_fetch_assoc($merged_records_query)['ids']);
@@ -26,6 +96,55 @@
 
 	// curl_close ($ch);
 
+
+$result = mysqli_query($conn, 
+	"SELECT
+		* 
+	FROM
+		order_data 
+	WHERE
+		user_id = '' 
+		AND STATUS = 'new' 
+		AND mearge = 'mearged'
+	"
+);
+
+while($row = mysqli_fetch_assoc($result)) {
+
+	$original_row_id = $row['sales_r_no'];
+
+	if($row['old_sales_r_no'] != '') {
+		$original_row_id = $row['old_sales_r_no'];
+	}
+
+	$to_update_item_no = $row['item_no'];
+	$to_update_item_title = addslashes($row['item_title']);
+	$to_update_quantity = $row['quantity'];
+	$to_update_sale_price = $row['sale_price'];
+	$to_update_total_price = '&#163;'. ($to_update_sale_price+$row['postage_packing']);
+	$to_update_sku = $row['sku'];
+	$to_update_merage = $row['merage'];
+
+	mysqli_query($conn, 
+		// echo (
+			"UPDATE `postages_demo`.`order_data` SET 
+				`item_no` = '". $to_update_item_no."',
+				`item_title` = '".$to_update_item_title."',
+				`quantity` = '".$to_update_quantity."',
+				`sale_price` = '".$to_update_sale_price."',
+				`total_price` = '".$to_update_total_price."',
+				`sku` = '".$to_update_sku."',
+				`mearge` = '".$to_update_merage."'
+			WHERE 
+				`sales_r_no` = ".$original_row_id." AND
+				`status` = 'new' AND 
+				`user_id` <> '';
+		"
+	);
+
+	mysqli_query($conn, "DELETE FROM order_data WHERE id = ".$row['id']);
+
+}
 
 
 ?>

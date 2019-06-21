@@ -171,73 +171,78 @@ $datachannel = mysqli_fetch_assoc($channeldata);
         }
 	}
 
+	
 
-	$unique_sql = "
-	SELECT
-		* 
-	FROM
-		order_data 
-	WHERE
-		buyer_address_1 IN ( SELECT * FROM ( SELECT buyer_address_1 FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_address_1 HAVING COUNT( buyer_address_1 ) > 1 ) AS a ) 
-		AND buyer_name IN ( SELECT * FROM ( SELECT buyer_name FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_name HAVING COUNT( buyer_name ) > 1 ) AS a ) 
-		AND buyer_postcode IN ( SELECT * FROM ( SELECT buyer_postcode FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_postcode HAVING COUNT( buyer_postcode ) > 1 ) AS a ) 
-		AND buyer_postcode <> 'WS13 8UR' 
+	// $unique_sql = "
+	// SELECT
+	// 	* 
+	// FROM
+	// 	order_data 
+	// WHERE
+	// 	buyer_address_1 IN ( SELECT * FROM ( SELECT buyer_address_1 FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_address_1 HAVING COUNT( buyer_address_1 ) > 1 ) AS a ) 
+	// 	AND buyer_name IN ( SELECT * FROM ( SELECT buyer_name FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_name HAVING COUNT( buyer_name ) > 1 ) AS a ) 
+	// 	AND buyer_postcode IN ( SELECT * FROM ( SELECT buyer_postcode FROM order_data WHERE STATUS = 'new' AND mearge <> 'hide' GROUP BY buyer_postcode HAVING COUNT( buyer_postcode ) > 1 ) AS a ) 
+	// 	AND buyer_postcode <> 'WS13 8UR' 
 
-		AND buyer_address_1 <> '' 
-		AND buyer_name <> '' 
-		AND buyer_postcode <> '' 
+	// 	AND buyer_address_1 <> '' 
+	// 	AND buyer_name <> '' 
+	// 	AND buyer_postcode <> '' 
 
-	GROUP BY
-		buyer_postcode
-	";
+	// GROUP BY
+	// 	buyer_postcode
+	// ";
 
-	$unique_records = mysqli_query($conn, $unique_sql);
+	// $unique_records = mysqli_query($conn, $unique_sql);
 
 
-	while($unique_row = mysqli_fetch_assoc($unique_records)) {
+	// while($unique_row = mysqli_fetch_assoc($unique_records)) {
 
-		$buyer_name = $unique_row['buyer_name'];
-		$buyer_address = $unique_row['buyer_address_1'];
-		$buyer_postcode = $unique_row['buyer_postcode'];
-		$status = $unique_row['status'];
+	// 	$buyer_name = $unique_row['buyer_name'];
+	// 	$buyer_address = $unique_row['buyer_address_1'];
+	// 	$buyer_postcode = $unique_row['buyer_postcode'];
+	// 	$status = $unique_row['status'];
 
-		$each_unique_sql = "
-			SELECT
-				GROUP_CONCAT(id) as ids
-			FROM
-				order_data 
-				WHERE
-				buyer_name = '".$buyer_name."'
-				AND 
-				buyer_address_1 = '".$buyer_address."'
-				AND 
-				buyer_postcode = '".$buyer_postcode."'
-				AND
-				mearge <> 'hide' 
-				AND
-				status = 'new'
-		";
+	// 	$each_unique_sql = "
+	// 		SELECT
+	// 			GROUP_CONCAT(id) as ids
+	// 		FROM
+	// 			order_data 
+	// 			WHERE
+	// 			buyer_name = '".$buyer_name."'
+	// 			AND 
+	// 			buyer_address_1 = '".$buyer_address."'
+	// 			AND 
+	// 			buyer_postcode = '".$buyer_postcode."'
+	// 			AND
+	// 			mearge <> 'hide' 
+	// 			AND
+	// 			status = 'new'
+	// 	";
 
-		$each_unique = mysqli_query($conn, $each_unique_sql);
+	// 	$each_unique = mysqli_query($conn, $each_unique_sql);
 
-		$ids = explode(',', mysqli_fetch_assoc($each_unique)['ids']);
+	// 	$ids = explode(',', mysqli_fetch_assoc($each_unique)['ids']);
 
-		$ch = curl_init();
+	// 	$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/meargesubmit.php?status=".$status."&type=curl");
-		curl_setopt($ch, CURLOPT_POST, 1);
+	// 	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/meargesubmit.php?status=".$status."&type=curl");
+	// 	curl_setopt($ch, CURLOPT_POST, 1);
 
-		// In real life you should use something like:
-		curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $ids)));
+	// 	// In real life you should use something like:
+	// 	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $ids)));
 
-		// Receive server response ...
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	// 	// Receive server response ...
+	// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-		$server_output = curl_exec($ch);
+	// 	$server_output = curl_exec($ch);
 
-		curl_close ($ch);
+	// 	curl_close ($ch);
 
-	}
+	// }
+
+	
+
+
 
 
 
