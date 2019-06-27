@@ -206,7 +206,7 @@
 																		<th style="font-size:12px;">PostCode</th>
 																		<th style="font-size:12px;">SKU</th>
 																		<th style="font-size:12px;">QTY</th>
-																		<th style="font-size:12px;">Shipping</th>
+																		<th style="font-size:12px;">Assigned Courier</th>
 																		<th style="font-size:12px;">Total</th>
 																		<th style="font-size: 12px; width: 20px;">
 																			<div class="">Status</div>
@@ -411,19 +411,69 @@
 																			</table>
 																		</td>
 																		<td style="font-size:12px;" class="">
-																			<?php 
-
-																				echo $data_011['assigned_courier'];
-
-
-																			?>
 																		<?php 
 																			$qdata = mysqli_query($conn,"select sum(quantity) as quantity12 from `order_data` where `sales_r_no`='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
 																			$dataQ = mysqli_fetch_assoc($qdata);
 																			echo $dataQ['quantity12'];
 																			?>
 																		</td>
-																		<td style="font-size:12px;" class=""><?php echo $data_011['delivery_service']; ?>
+																		
+																		<td style="font-size:12px;" class="">
+																			
+																			
+
+																			<div>
+																				
+																				
+																				<span class="courier_name">
+																				
+																					<?php 
+
+																						if( $data_011['assigned_courier'] != '' ) {
+																							
+																							echo $data_011['assigned_courier'];
+
+																						} else {
+
+																							$order_total = mysqli_query($conn,"SELECT * FROM `order_data`  WHERE `sales_r_no` ='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
+																							while($total_order = mysqli_fetch_assoc($order_total)){
+																								$order_value += ($total_order['sale_price'] * $total_order['quantity']) + $total_order['postage_packing'];
+																							}
+
+																							if($order_value < 6) {
+																								echo 'Royal Mail';
+																							} else if ($order_value > 5 && $order_value < 46 ) {
+																								echo 'myHermes';
+																							} else if ($order_value > 45) {
+																								echo 'Other Courier';
+																							}
+
+																							$order_value = null;
+
+																						}
+
+																						
+																					?>
+																				
+																				</span>
+																				
+																				<select class="courier-selector hide" data-id="<?= $id; ?>">
+																					
+																					<option value="" disabled selected>Select Courier</option>
+																					<option value="Royal Mail">Royal Mail</option>
+																					<option value="myHermes">myHermes</option>
+																					<option value="Other Courier">Other Courier</option>
+
+																				</select>
+
+																				<span class="assign-edit assign-cancel hide" data-action="cancel"> <i class="fa fa-times" aria-hidden="true"></i> </span>
+
+																				<span class="assign-edit" data-action="edit"> <i class="fa fa-pencil" aria-hidden="true"></i> </span>
+
+																			</div>
+																		
+
+
 																		</td>
 																		<td style="font-size:12px;"><?php
 																			$order_total = mysqli_query($conn,"SELECT * FROM `order_data`  WHERE `sales_r_no` ='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
@@ -857,6 +907,71 @@
 				<script src="../assets/layouts/layout3/scripts/demo.min.js" type="text/javascript"></script>
 				<script src="../assets/layouts/global/scripts/quick-sidebar.min.js" type="text/javascript"></script>
 				<script>
+					
+					$( () => {
+						
+
+						let el = $('.assign-edit');
+						
+						el.click( e => {
+
+							let $this = $(e.currentTarget);
+							let action = $this.attr('data-action');
+							
+							let dropDown = $this.parent().children('.courier-selector');
+							let courier = $this.parent().children('.courier_name');
+							
+							$this.addClass('hide');
+							$this.siblings().removeClass('hide');
+
+							if(action == 'cancel') {
+
+								dropDown.hide();
+								courier.show();
+
+							} else if (action == 'edit') {
+
+								dropDown.show();
+								courier.hide();
+
+							}
+
+							
+						});
+
+						$('.courier-selector').change( e => {
+
+							let $this = $(e.currentTarget);
+							let udpated_courier = $this.val();
+
+
+							$.ajax({
+								type: "post",
+								url: "/admin/update_courier.php",
+								data: {
+									id: $this.attr('data-id'),
+									courier: udpated_courier
+
+								}
+
+							});
+
+
+							
+							let courier = $this.prev('.courier_name');
+							courier.html(udpated_courier);
+							
+							$this.hide();
+							courier.show();
+
+							$('.assign-edit').removeClass('hide').show();
+							$('.assign-edit.assign-cancel').addClass('hide');
+
+						} );
+						
+					});
+
+					
 					function order_transaction() {
 						console.log("test")
 					}	  

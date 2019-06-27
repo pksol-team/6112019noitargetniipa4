@@ -513,3 +513,22 @@ z-index:1000;
     position: relative;
     margin-top: -2px;
 }
+
+.assign-edit {
+	cursor: pointer;
+	background-color: #fff;
+	padding: 8px 11px;
+	display: inline-block;
+	border: 1px solid #f6f6f7;
+	border-radius: 50%;
+	box-shadow: 1px 1px 2px #00000059;
+}
+
+.hide {
+	display: none;
+}
+
+.assign-cancel {
+	padding: 8px 12px;
+}
+
