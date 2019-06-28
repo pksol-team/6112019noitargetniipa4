@@ -272,7 +272,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				WHERE
 				buyer_name = '".$buyer_name."'
 				AND 
-				buyer_address_1 = '".$buyer_address."'
+				buyer_address_1 = '".addslashes($buyer_address)."'
 				AND 
 				buyer_postcode = '".$buyer_postcode."'
 				AND

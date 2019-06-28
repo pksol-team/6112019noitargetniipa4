@@ -8,6 +8,9 @@
 	}
 
 ?>
+
+
+
 <!-- 
 	Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
 	Version: 4.5.6
@@ -172,7 +175,7 @@
 																		<div class="btn-group ">
 																			<select  style="font-size:12px;"  class="form-control fltr" name="filter_name" id="filter_name" onchange="run(this.value);">
 																				<option>Filter</option>
-																				<option value="shipping">Shipping</option>
+																				<option value="shipping">Assigned Courier</option>
 																				<option value="price">Price</option>
 																				<option value="sku">SKU</option>
 																			</select>
@@ -241,7 +244,7 @@
 																		ORDER BY count(id) asc");  
 																		}
 																		elseif(!empty($shippingword)){
-																		$sql_011=mysqli_query($conn,"SELECT * FROM `order_data` where status='new' AND not `mearge`='hide' AND `delivery_service` LIKE '%$shippingword%' 
+																		$sql_011=mysqli_query($conn,"SELECT * FROM `order_data` where status='new' AND not `mearge`='hide' AND `assigned_courier` LIKE '%$shippingword%' 
 																		  GROUP BY `id`,`sales_r_no`,`company_id`,`sale_date`
 																		ORDER BY count(id) asc"); 
 																		}
@@ -324,16 +327,39 @@
 																					$order_tile = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
 																					while($tiles_order = mysqli_fetch_assoc($order_tile)) {
 
-																						if($tiles_order['sku']=='' or $tiles_order['mearge']=='hide') {
+																					
 																						
+																						
+																						
+																						if($tiles_order['sku']=='' or $tiles_order['mearge']=='hide') {
+																							
+																							
 																						} else { ?>
 																							
+																							<?php 
+																								$sales_r_no_delivery = $tiles_order['old_sales_r_no']?$tiles_order['old_sales_r_no']:$tiles_order['sales_r_no'];
+																								$deliveries_result = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$sales_r_no_delivery'");
+																								
+																								while($deliveries_row = mysqli_fetch_array($deliveries_result)) {
+
+																									if($deliveries_row['delivery_service'] != '') {
+																										$deliveries_array[] = $deliveries_row['delivery_service'];
+																									}
+
+																								}
+
+
+																							
+																							?>
 																							<tr><td class='col-md-2' style='font-size:12px; word-wrap: break-word;'><?php echo $tiles_order['old_sales_r_no']?$tiles_order['old_sales_r_no']:$tiles_order['sales_r_no']; ?></td></tr>
 
 																						<?php }
 																						
 
 																					} 
+
+																					
+
 																					
 																				?>
 
@@ -429,29 +455,65 @@
 																				
 																					<?php 
 
+																						$assigned_courier_dynamic = '';
+
+
 																						if( $data_011['assigned_courier'] != '' ) {
 																							
-																							echo $data_011['assigned_courier'];
+																							$assigned_courier_dynamic = $data_011['assigned_courier'];
 
 																						} else {
 
-																							$order_total = mysqli_query($conn,"SELECT * FROM `order_data`  WHERE `sales_r_no` ='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
-																							while($total_order = mysqli_fetch_assoc($order_total)){
-																								$order_value += ($total_order['sale_price'] * $total_order['quantity']) + $total_order['postage_packing'];
+																							$twofour = false;
+
+																							foreach($deliveries_array as $delivery_name) {
+
+																								preg_match_all('!\d+!', $delivery_name, $delivery_service_num);
+
+																								if($delivery_service_num[0][0] == '24') {
+
+																									$twofour = true;
+
+																								}
+
+																								
 																							}
 
-																							if($order_value < 6) {
-																								echo 'Royal Mail';
-																							} else if ($order_value > 5 && $order_value < 46 ) {
-																								echo 'myHermes';
-																							} else if ($order_value > 45) {
-																								echo 'Other Courier';
+
+																							$deliveries_array = null;
+
+																							
+
+																							if($twofour == true) {
+																								
+																								$assigned_courier_dynamic = 'Next Day';
+																								
+																							} else {
+
+																								$order_total = mysqli_query($conn,"SELECT * FROM `order_data`  WHERE `sales_r_no` ='$sales_r_no' and `company_id`='$company_id_n'  and `status`='new' and `sale_date`='$sale_date_new'");
+																								while($total_order = mysqli_fetch_assoc($order_total)){
+																									$order_value += ($total_order['sale_price'] * $total_order['quantity']) + $total_order['postage_packing'];
+																								}
+	
+																							
+	
+																								if($order_value <= 6) {
+																									$assigned_courier_dynamic = 'Royal Mail';
+																								} else if ($order_value > 6 && $order_value < 46 ) {
+																									$assigned_courier_dynamic = 'myHermes';
+																								} else if ($order_value > 45) {
+																									$assigned_courier_dynamic = 'Other Courier';
+																								}
+	
+																								$order_value = null;
+
 																							}
 
-																							$order_value = null;
 
 																						}
 
+																						mysqli_query($conn, "update `order_data` set `assigned_courier`= '".$assigned_courier_dynamic."' where `id`='$id'");
+																						echo $assigned_courier_dynamic;
 																						
 																					?>
 																				
@@ -460,6 +522,7 @@
 																				<select class="courier-selector hide" data-id="<?= $id; ?>">
 																					
 																					<option value="" disabled selected>Select Courier</option>
+																					<option value="Next Day">Next Day</option>
 																					<option value="Royal Mail">Royal Mail</option>
 																					<option value="myHermes">myHermes</option>
 																					<option value="Other Courier">Other Courier</option>

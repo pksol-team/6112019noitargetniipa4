@@ -371,7 +371,18 @@ function submitNoteDispatch(){
 
 <div class="form-group">
 <label class="control-label">Shipping Filter</label>
-<input type="text" name="shippingword"  placeholder="enter Shipping" class="form-control fltr">
+
+<select class="filter-courier-dropdown form-control custom-select" name="shippingword">								
+	<option value="" disabled selected>Select Courier</option>
+	<option value="Next Day">Next Day</option>
+	<option value="Royal Mail">Royal Mail</option>
+	<option value="myHermes">myHermes</option>
+	<option value="Other Courier">Other Courier</option>
+</select>
+
+<!-- <input type="text" name="shippingword"  placeholder="Enter Courier" class="form-control fltr"> -->
+
+
 </div>
 
 <div class="button-group">
