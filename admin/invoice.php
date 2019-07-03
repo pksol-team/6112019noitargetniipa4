@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 error_reporting(0);
 include 'config.php';
@@ -16,7 +15,7 @@ $html = null;
 //
 
 //start main div
-$html .='<body style="font-family: Calibri, sans-serif;"><center><div style="display:block; width:21.90cm; height:auto;  ">';
+$html .='<!DOCTYPE html><body style="font-family: Calibri, sans-serif;"><center><div style="display:block; width:21.90cm; height:auto;  ">';
 //start header
 $html .='<div style="border-bottom:2px solid #bbb; margin-left:5px; margin-right:5px;display:block; height:50px; width:100%; ">';
 $html .='<center><h2>Invoice</h2></center>';

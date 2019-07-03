@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php
 error_reporting(0);
  include 'config.php';
@@ -14,6 +13,7 @@ if($_SESSION['password']==$$datapasswordcheck){
 }
 
 ?>
+<!DOCTYPE html>
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
 Version: 4.5.6

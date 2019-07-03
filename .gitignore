@@ -1,1 +1,5 @@
 /assets
+*.pdf
+!admin/*.pdf
+/4-api.zip
+/pdf_at_admin

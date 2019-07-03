@@ -1,0 +1,14 @@
+https://shopping-hub.in:2083/
+
+username: shoppinghub24x7
+pass: Vijay123?
+
+
+
+
+http://www.shopping-hub.in/orders -> live link
+
+DB: orders_postages
+User: orders_4_postag
+Pass: =6^F_8xT74@Q
+

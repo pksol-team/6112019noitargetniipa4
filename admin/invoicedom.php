@@ -2,9 +2,15 @@
 error_reporting(0);
 include 'config.php';
 session_start();
-if($_SESSION['password']==''){
-	echo "<script>window.location='login.php'</script>";
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
+
+	if($_SESSION['password']==''){
+		echo "<script>window.location='login.php'</script>";
+	}
+
 }
+
 $company_order_id = $_POST['company_order_id'];
 
 
@@ -35,6 +41,7 @@ $data_order = mysqli_fetch_assoc($order_data);
 $company_id = $data_order['company_id'];
 $order_no = $data_order['sales_r_no'];
 $status = $data_order['status'];
+$buyer_email = $data_order['buyer_email'];
 $sale_date = $data_order['sale_date'];
 $company_data  = mysqli_query($conn,"select * from `company` where `id`='$company_id'");
 $data_company = mysqli_fetch_assoc($company_data);
@@ -314,7 +321,13 @@ mysqli_query($conn,"insert into `mail` (`main_order_id`,`sales_r_no`,`company_id
 file_put_contents($order_no.'-'.'invoice.pdf', $output);
 chmod($order_no.'-'.'invoice.pdf',0755);
 
-}$total=null; $totalvat=null;	$netvalue=null;	$totalpostage=null;	$mail=null;
+}
+
+
+$total=null; $totalvat=null;	$netvalue=null;	$totalpostage=null;	$mail=null;
+
+
+
     
 	
  
@@ -603,6 +616,7 @@ $html2 .='</div></center><div style="page-break-after:always;"></div></center></
 
 echo $html2;
 }
+
 
 ?>
 <?php //echo "<script>window.location='c_order_view.php'</script>";?>

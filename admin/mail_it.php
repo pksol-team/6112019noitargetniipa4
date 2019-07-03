@@ -11,15 +11,26 @@ require 'PHPMailer/src/Exception.php';
 require 'PHPMailer/src/PHPMailer.php';
 require 'PHPMailer/src/SMTP.php';
 
- $mail_data = mysqli_query($conn,"select * from `mail` where `status`='' ORDER BY mail_id desc LIMIT 15");
 
 
-while($data_mail  = mysqli_fetch_assoc($mail_data)){
+
+if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
+
+	$ids =  implode (", ", $_POST['include_ids']);
+	$mail_data = mysqli_query($conn,"select * from `mail` where `status`='' AND main_order_id IN (".$ids.") ORDER BY mail_id desc LIMIT 15");
+
+} else {
+	
+	$mail_data = mysqli_query($conn,"select * from `mail` where `status`='' ORDER BY mail_id desc LIMIT 15");
+
+}
+
+while($data_mail  = mysqli_fetch_assoc($mail_data)) {
 	 $main_order_id= $data_mail['main_order_id'];
 	 $sales_r_no11= $data_mail['sales_r_no'];
 	$order_data = mysqli_query($conn,"select * from `order_data` where `id`='$main_order_id' order by id asc");
 	$data_order= mysqli_fetch_assoc($order_data);
-	  $buyer_email = $data_order['buyer_email'];
+	  $buyer_email = 'vijay_pl@ymail.com'; //$data_order['buyer_email'];
 	 $buyer_name = $data_order['buyer_name'];
 	 $order_no = $data_order['sales_r_no'];
 	

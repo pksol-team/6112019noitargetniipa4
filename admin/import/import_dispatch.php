@@ -1,8 +1,9 @@
-﻿<?php
-// error_reporting(0);
+﻿﻿<?php
+
+error_reporting(0);
 include 'config.php';
 
-
+$print_ids = [];
 
 $company_id = $_POST['company_name'];
 
@@ -19,7 +20,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
         $file = fopen($fileName, "r");
         //while (($data = fgetcsv($handle, 0, ";","'")) !== FALSE)
         while (($column = fgetcsv($file, 10000, "," )) !== FALSE) {
-			if($datachannel['name']=='eBay'){
+			if($datachannel['name']=='eBay') {
 	
 				//uploading eBay data	
 	
@@ -32,7 +33,15 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				$data6=mysqli_real_escape_string($conn,$column[6]);
 				$data7=mysqli_real_escape_string($conn,$column[7]);
 				$data8=mysqli_real_escape_string($conn,$column[8]);
-				$data9=mysqli_real_escape_string($conn,$column[9]);
+				
+				$postcode1 = str_replace(' ', '', mysqli_real_escape_string($conn,$column[9]));
+
+				$postcode2 = substr($postcode1, -3);
+
+				$postcode = str_replace($postcode2, ' '.$postcode2, $postcode1);
+
+				$data9 =  $postcode; // postcode
+
 				$data10=mysqli_real_escape_string($conn,$column[10]);
 				$data11=mysqli_real_escape_string($conn,number_format($column[11],0));
 				$data12=mysqli_real_escape_string($conn,$column[12]);
@@ -91,7 +100,15 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 							//echo $data13."already stored!"."<br>";
 							
 				 mysqli_query($conn,"INSERT INTO `order_data`(`company_id`,`channel_id`, `sales_r_no`, `user_id`, `buyer_name`, `buyer_phone`, `buyer_email`, `buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `item_no`, `item_title`, `sku`, `quantity`, `sale_price`, `included_vat_rate`, `postage_packing`, `insurance`, `cash_on_delivery`, `total_price`, `payment_method`, `sale_date`, `checkout_date`, `paid_on_date`, `dispatch_date`, `invoice_date`, `invoice_number`, `feedback_left`, `feedback_received`, `notes`, `unique_product_id`, `private_field`, `productid_type`, `productid_value`, `product_value_2`, `paypal_id`, `delivery_service`, `cash_on_delivery_option`, `transaction_id`, `variation`, `global_shipping_program`, `global_shipping_references`, `click_collect`, `click_collect_reference`, `post_address_1`, `post_address_2`, `post_city`, `post_county`, `post_postcode`, `post_country`, `ebay_plus`,`status`,`mearge`,`tacking_no`,`shipping_cost`) VALUES ('$company_id','$channel','$data0','$data1','$data2','$data3','$data4','$data5','$data6','$data7','$data8','$data9','$data10','$data11','$data12','$data13','$data14','$data15','$data16','$data17','$data18','$data19','$data20','$data21','$data22','$data23','$data24','$data25','$data26','$data27','$data28','$data29','$data30','$data31','$data32','$data33','$data34','$data35','$data36','$data37','$data38','$data39','$data41','$data42','$data43','$data44','$data45','$data46','$data47','$data48','$data49','$data50','$data51','$data52','new','','$data53','$data54')");
-				 $id = mysqli_insert_id($conn);
+				 
+				 
+				$id = mysqli_insert_id($conn);
+				if($data4 != '') {
+
+					array_push($print_ids, $id);
+
+				}
+
 				 if(!empty($data2) and empty($data12)){
 					mysqli_query($conn,"update `order_data` set `quantity`='' where `id`='$id'"); 
 				 }
@@ -171,6 +188,46 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 
 
+	
+
+
+	// Request to generate pdf
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/invoicedom.php?type=curl");
+	curl_setopt($ch, CURLOPT_POST, 1);
+
+	// In real life you should use something like:
+	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $print_ids)));
+
+	// Receive server response ...
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$server_output = curl_exec($ch);
+
+	curl_close ($ch);
+
+
+
+
+
+
+
+	// request to send mails
+	$ch = curl_init();
+
+	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/mail_it.php?type=curl");
+	curl_setopt($ch, CURLOPT_POST, 1);
+
+	// In real life you should use something like:
+	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('include_ids' => $print_ids)));
+
+	// Receive server response ...
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+	$server_output = curl_exec($ch);
+
+	curl_close ($ch);
 
 
 
@@ -179,62 +236,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 
 
-
-	// $result = mysqli_query($conn, 
-	// 	"SELECT
-	// 		* 
-	// 	FROM
-	// 		order_data 
-	// 	WHERE
-	// 		user_id = '' 
-	// 		AND STATUS = 'new' 
-	// 		AND mearge = 'mearged'
-	// 	"
-	// );
-	// while($row = mysqli_fetch_assoc($result)) {
-	// 	$original_row_id = $row['sales_r_no'];
-	// 	if($row['old_sales_r_no'] != '') {
-	// 		$original_row_id = $row['old_sales_r_no'];
-	// 	}
-	// 	$to_update_item_no = $row['item_no'];
-	// 	$to_update_item_title = addslashes($row['item_title']);
-	// 	$to_update_quantity = $row['quantity'];
-	// 	$to_update_sale_price = $row['sale_price'];
-	// 	$to_update_total_price =  '£'. ($to_update_sale_price+$row['postage_packing']);
-	// 	$to_update_sku = $row['sku'];
-	// 	$to_update_merage = $row['merage'];
-	// 	mysqli_query($conn, 
-	// 		// echo (
-	// 			"UPDATE `postages_demo`.`order_data` SET 
-	// 				`item_no` = '". $to_update_item_no."',
-	// 				`item_title` = '".$to_update_item_title."',
-	// 				`quantity` = '".$to_update_quantity."',
-	// 				`sale_price` = '".$to_update_sale_price."',
-	// 				`total_price` = '".$to_update_total_price."',
-	// 				`sku` = '".$to_update_sku."',
-	// 				`mearge` = '".$to_update_merage."'
-	// 			WHERE 
-	// 				`sales_r_no` = ".$original_row_id." AND
-	// 				`status` = 'new' AND 
-	// 				`user_id` <> '';
-	// 		"
-	// 	);
-	// 	mysqli_query($conn, "DELETE FROM order_data WHERE id = ".$row['id']);
-	// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	// For merge task
 	$unique_sql = "
 	SELECT
 		* 
@@ -302,99 +304,9 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 	}
 
-	
 
 
+	echo "<script>window.location='../c_order_view.php'</script>";
 
 
-
-
-/******************* Merging orders for transaction *****************************/
-
-		
-
-
-            // $getNewOrders = mysqli_query($conn, "
-    		// 		SELECT *
-    		// 		FROM order_data
-    		// 		WHERE buyer_address_1 IN (SELECT *
-    		// 		                       FROM (SELECT buyer_address_1
-    		// 		                             FROM order_data
-    		// 		                             WHERE status = 'new'
-    		// 		                             GROUP BY buyer_address_1
-    		// 		                             HAVING COUNT(buyer_address_1) > 1)
-    				                          
-    		// 		                       AS a)
-    		// 		AND buyer_postcode <> 'WS13 8UR'
-
-    		// 		AND buyer_postcode IN (SELECT *
-    		// 		                       FROM (SELECT buyer_postcode
-    		// 		                             FROM order_data
-    		// 		                             WHERE status = 'new'
-    		// 		                             GROUP BY buyer_postcode
-    		// 		                             HAVING COUNT(buyer_postcode) > 1)
-    				                          
-    		// 		                       AS a)
-            // 	");
-
-            // if(mysqli_num_rows($getNewOrders) > 0){     
-
-            // 	$orderIdArray = '';   	
-    	        
-    	    //     while ($newOrder = mysqli_fetch_array($getNewOrders)) {
-
-    	    //     	// check if post code and address already exist in transaction table
-    	    //     	$checkTable = mysqli_query($conn, "SELECT * FROM transaction WHERE address = '".$newOrder['buyer_address_1']."' AND post_code = '".$newOrder['buyer_postcode']."'");
-
-    	    //     	if (mysqli_num_rows($checkTable) > 0) {
-    	        		
-    	    //     		$data = mysqli_fetch_assoc($checkTable);
-
-    	    //     		if(!strpos($data['order_id'], $newOrder['id']) !== false){
-    	        			
-    		//         		$transactionID = $data['id'];
-    		        		
-    		//         		$oldOrderId = trim($data['order_id'],'[]');
-
-    		//         		$updateOrderId = '['.$oldOrderId.','.$newOrder['id'].']';
-
-    		//         		mysqli_query($conn, "UPDATE transaction SET order_id = '".$updateOrderId."' WHERE id = ".$transactionID."");
-    		        		
-    	    //     		}
-
-    	        	
-    	    //     	}else{
-    		//         	if ($orderIdArray) {
-
-    		//         		echo $orderIdArray;
-    		//         		$orderIdArray = $orderIdArray.','.$newOrder['id'];
-    		        		
-    		//         	}else{
-    		        		
-    		//         		$orderIdArray = $newOrder['id'];
-
-    		//         	}
-    		        
-    		//         	$orderAddress = $newOrder['buyer_address_1'];
-
-    		//         	$orderPostCode = $newOrder['buyer_postcode'];
-    	        		
-    		// 	        $orderIdArray = '['.$orderIdArray.']';
-
-    		// 	        mysqli_query($conn, "INSERT INTO `transaction`(`address`, `order_id`, `post_code`) VALUES ('".$orderAddress."', '".$orderIdArray."', '".$orderPostCode."')");
-    	    //     	}
-
-    	    //     	$orderIdArray = '';
-
-    	    //     }
-
-            // }else{
-            // 	echo "no data";
-            // }
-
-
-
-
-    
-echo "<script>window.location='../c_order_view.php'</script>";
 ?>

@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <?php include 'config.php';
 error_reporting(0);
 session_start();
@@ -8,6 +7,7 @@ if($_SESSION['password']==''){
 }
 
 ?>
+<!DOCTYPE html>
 
 <html lang="en">
     <!--<![endif]-->

@@ -3,6 +3,7 @@ include 'config.php';
 session_start();
 
 
+
 if(!isset($_GET['type']) && $_GET['type'] != 'curl') {
 
 	if($_SESSION['password']==''){

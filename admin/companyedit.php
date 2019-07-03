@@ -1,5 +1,3 @@
-<!DOCTYPE html>
-
 <?php error_reporting(0);
  include 'config.php';
 session_start();
@@ -9,6 +7,8 @@ if($_SESSION['password']==''){
 
 $id= $_GET['id'];
 ?>
+<!DOCTYPE html>
+
 <!-- 
 Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
 Version: 4.5.6
