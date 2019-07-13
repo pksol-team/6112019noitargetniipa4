@@ -8,9 +8,6 @@
 
 ?>
 <!DOCTYPE html>
-
-
-
 <!-- 
 	Template Name: Metronic - Responsive Admin Dashboard Template build with Twitter Bootstrap 3.3.6
 	Version: 4.5.6
@@ -63,6 +60,15 @@
 				<!-- END THEME LAYOUT STYLES -->
 				<link rel="shortcut icon" href="favicon.ico" />
 			</head>
+			<style>
+				/* table:not(#sample_1) {
+					margin: 0 auto;
+					width: 100%;
+					clear: both;
+					border-collapse: collapse;
+					word-wrap:break-word;
+				} */
+			</style>
 			<!-- END HEAD -->
 			<?php include 'popups.php';?>
 			<body class="page-container-bg-solid page-md" style="font-size: 12px;">
@@ -204,8 +210,8 @@
 																		</th>
 																		<th style="font-size:12px;">Logo</th>
 																		<th style="font-size:12px;">order Id</th>
-																		<th style="font-size:12px;">Date</th>
-																		<th style="font-size:12px;">Customer</th>
+																		<th style="font-size:12px;">Order Date</th>
+																		<th style="font-size:12px;">Customer Name</th>
 																		<th style="font-size:12px;">PostCode</th>
 																		<th style="font-size:12px;">SKU</th>
 																		<th style="font-size:12px;">QTY</th>
@@ -291,9 +297,23 @@
 																			} else {
 
 																				if($sku_data['sku']=='') {
-																					$skus[] = "<tr><td class='col-md-2' style='font-size:12px; word-wrap: break-word;'>".$sku_data['sku']."</td><td  class='col-md-1'>"."  ".$sku_data['quantity'].$sku_data['quantity_to_ship']."</td></tr>";
+																					$skus[] = "<tr><td class='col-md-2' style='font-size:12px; word-wrap: break-word;'> <span class='sku-view'>".$sku_data['sku']." </span>
+
+																						<input type='text' class='hide' value='".$sku_data['sku']."' name='sku-value' style='display: block; text-align: center; margin: 5px auto;'>
+																						<span class='sku-edit sku-cancel hide' data-action='cancel'> <i class='fa fa-times' aria-hidden='true'></i> </span>
+																						<span class='sku-edit sku-save hide' data-id='".$sku_data['id']."' data-action='save'> <i class='fa fa-check' aria-hidden='true'></i> </span>
+																						<span class='sku-edit' data-action='edit'> <i class='fa fa-pencil' aria-hidden='true'></i> </span>
+																				
+																					</td><td  class='col-md-1'>"."  ".$sku_data['quantity'].$sku_data['quantity_to_ship']."</td></tr>";
 																				} else {
-																					$skus[] = "<tr><td class='col-md-2' style='font-size:12px; word-wrap: break-word;'>".$sku_data['sku']."</td><td  class='col-md-1'>".$sku_data['quantity'].$sku_data['quantity_to_ship']."</td></tr>";
+																					$skus[] = "<tr><td class='col-md-2' style='font-size:12px; word-wrap: break-word;'><span class='sku-view'>".$sku_data['sku']." </span>
+																						
+																						<input type='text' class='hide' value='".$sku_data['sku']."' name='sku-value' style='display: block; text-align: center; margin: 5px auto;'>
+																						<span class='sku-edit sku-cancel hide' data-action='cancel'> <i class='fa fa-times' aria-hidden='true'></i> </span>
+																						<span class='sku-edit sku-save hide' data-id='".$sku_data['id']."' data-action='save'> <i class='fa fa-check' aria-hidden='true'></i> </span>
+																						<span class='sku-edit' data-action='edit'> <i class='fa fa-pencil' aria-hidden='true'></i> </span>
+
+																					</td><td  class='col-md-1'>".$sku_data['quantity'].$sku_data['quantity_to_ship']."</td></tr>";
 																				}
 
 																			}
@@ -320,7 +340,7 @@
 																		<td  style="font-size:12px;" class="">
 																			<div class="tooltip1">
 
-																				<table width="230px" border="1px  #fafafa; word-wrap: break-word;"><?php echo implode("", $order_ids); ?>
+																				<table width="100px" border="1px  #fafafa; word-wrap: break-word;"><?php echo implode("", $order_ids); ?>
 
 																					<?php 
 
@@ -1001,6 +1021,62 @@
 
 							
 						});
+
+						$('.sku-edit').click( e => {
+
+							let $this = $(e.currentTarget);
+							let action = $this.attr('data-action');
+
+
+
+							if(action == 'edit') {
+								
+								$this.prevAll('input').removeClass('hide');
+								$this.prev().removeClass('hide');
+								$this.prevAll('.sku-view').addClass('hide');
+								$this.prevAll('.sku-cancel').removeClass('hide');
+								$this.addClass('hide');
+								
+
+							} else if (action == 'cancel' ) {
+								
+								$this.addClass('hide');
+								$this.next().addClass('hide');
+								$this.prev().addClass('hide');
+								$this.prev().prev().removeClass('hide');
+								$this.next().next().removeClass('hide');
+
+
+
+							} else if (action == 'save') {
+
+								$this.addClass('hide');
+								$this.next().removeClass('hide');
+								$this.prev().addClass('hide');
+								$this.prev().prev().addClass('hide');
+								$this.prev().prev().prev().removeClass('hide');
+
+								let input_value = $this.prev().prev().val();
+								$this.prev().prev().prev().html(input_value);
+								
+								$.ajax({
+									type: "post",
+									url: "/admin/update_sku.php",
+									data: {	
+										id: $this.attr('data-id'),
+										sku: input_value
+
+									}
+
+								});
+
+
+							}
+
+
+
+						});
+
 
 						$('.courier-selector').change( e => {
 

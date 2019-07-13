@@ -40,14 +40,15 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 				$postcode = str_replace($postcode2, ' '.$postcode2, $postcode1);
 
-				$data9 =  $postcode; // postcode
+				$data9 =  $postcode; // postcode 
 
 				$data10=mysqli_real_escape_string($conn,$column[10]);
 				$data11=mysqli_real_escape_string($conn,number_format($column[11],0));
 				$data12=mysqli_real_escape_string($conn,$column[12]);
-				$data13=mysqli_real_escape_string($conn,$column[13]);//sku-customelabel
+				
+				$data13 = substr(mysqli_real_escape_string($conn,$column[13]), 2); //sku-customelabel
 
-					 $data14=mysqli_real_escape_string($conn,$column[14]);//qty
+				$data14=mysqli_real_escape_string($conn,$column[14]);//qty
 
 				 $data15 =mysqli_real_escape_string($conn,substr(preg_replace('/\s+/', '',$column[15]),1));//price
 
@@ -90,39 +91,64 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				$data52=mysqli_real_escape_string($conn,$column[52]);
 				$data53=mysqli_real_escape_string($conn,$column[53]);
 				$data54=mysqli_real_escape_string($conn,$column[54]);
-				if($data0=='' or $data13=='Custom Label'){}else{
-				$check_o_id = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$data0'");
-						$data_ceck_o = mysqli_fetch_assoc($check_o_id);
-						
-						if($data_ceck_o['sku']==$data13 AND $data_ceck_o['quantity']==$data14 AND $data_ceck_o['item_title']==$data12){}else{
-						if($data_ceck_o['mearge']=='hide'){}else{
-						
-							//echo $data13."already stored!"."<br>";
-							
-				 mysqli_query($conn,"INSERT INTO `order_data`(`company_id`,`channel_id`, `sales_r_no`, `user_id`, `buyer_name`, `buyer_phone`, `buyer_email`, `buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `item_no`, `item_title`, `sku`, `quantity`, `sale_price`, `included_vat_rate`, `postage_packing`, `insurance`, `cash_on_delivery`, `total_price`, `payment_method`, `sale_date`, `checkout_date`, `paid_on_date`, `dispatch_date`, `invoice_date`, `invoice_number`, `feedback_left`, `feedback_received`, `notes`, `unique_product_id`, `private_field`, `productid_type`, `productid_value`, `product_value_2`, `paypal_id`, `delivery_service`, `cash_on_delivery_option`, `transaction_id`, `variation`, `global_shipping_program`, `global_shipping_references`, `click_collect`, `click_collect_reference`, `post_address_1`, `post_address_2`, `post_city`, `post_county`, `post_postcode`, `post_country`, `ebay_plus`,`status`,`mearge`,`tacking_no`,`shipping_cost`) VALUES ('$company_id','$channel','$data0','$data1','$data2','$data3','$data4','$data5','$data6','$data7','$data8','$data9','$data10','$data11','$data12','$data13','$data14','$data15','$data16','$data17','$data18','$data19','$data20','$data21','$data22','$data23','$data24','$data25','$data26','$data27','$data28','$data29','$data30','$data31','$data32','$data33','$data34','$data35','$data36','$data37','$data38','$data39','$data41','$data42','$data43','$data44','$data45','$data46','$data47','$data48','$data49','$data50','$data51','$data52','new','','$data53','$data54')");
-				 
-				 
-				$id = mysqli_insert_id($conn);
-				if($data4 != '') {
+				
+				if($data0=='' or $data13=='stom Label') {
 
-					array_push($print_ids, $id);
+				} else {
+					
+						// first upload both file okay
 
-				}
 
-				 if(!empty($data2) and empty($data12)){
-					mysqli_query($conn,"update `order_data` set `quantity`='' where `id`='$id'"); 
-				 }
-				 $order_id11 = mysqli_insert_id($conn);
-				 //mysqli_query($conn,"insert into `order_data_mearge` (`order_id`,`order_no`)values('$order_id11','$data0')");
-							//mysqli_query($conn,"update `order_data` set `mearge`='mearged' where `sales_r_no`='$data0'");
-							
-							
+						// $check_o_id = mysqli_query($conn, "select * from `order_data` where `sales_r_no`='$data0' AND buyer_postcode = '".$data9."'  AND company_id = '".$company_id."' AND sku = '".$data13."' ");
+
+
+						$company_data_query = mysqli_query($conn,"select * from `company` where `id`='$company_id'");
+
+						$company_data = mysqli_fetch_assoc($company_data_query);
+
+
+						$company_code = substr((explode('-', $company_data['name']))[1], 1, 2);
 						
-				}
-				}
-				}
-			}
-		 	else{ 
+						$sales_r_no_with_company = $company_code.'-'.$data0;
+
+						$check_o_id = mysqli_query($conn, "select * from `order_data` where `sales_r_no`='$sales_r_no_with_company' AND company_id = '".$company_id."' AND sku2 = '".$data13."' ");
+						
+
+						$data_ceck_o = mysqli_num_rows($check_o_id);
+
+
+						echo "select * from `order_data` where `sales_r_no`='$sales_r_no_with_company' AND company_id = '".$company_id."' AND 
+						sku = '".$data13."' ";
+						
+						if($data_ceck_o == 0 && $data0 != '' && $data1 != '' && $column[22] != '' ) {
+							
+							echo 'insert record_id-'.$data0.'-company_id-'.$company_id;
+							echo '<br><br>';
+
+							
+
+							mysqli_query($conn,"INSERT INTO `order_data`(`company_id`,`channel_id`, `sales_r_no`, `user_id`, `buyer_name`, `buyer_phone`, `buyer_email`, `buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `item_no`, `item_title`, `sku`, `quantity`, `sale_price`, `included_vat_rate`, `postage_packing`, `insurance`, `cash_on_delivery`, `total_price`, `payment_method`, `sale_date`, `checkout_date`, `paid_on_date`, `dispatch_date`, `invoice_date`, `invoice_number`, `feedback_left`, `feedback_received`, `notes`, `unique_product_id`, `private_field`, `productid_type`, `productid_value`, `product_value_2`, `paypal_id`, `delivery_service`, `cash_on_delivery_option`, `transaction_id`, `variation`, `global_shipping_program`, `global_shipping_references`, `click_collect`, `click_collect_reference`, `post_address_1`, `post_address_2`, `post_city`, `post_county`, `post_postcode`, `post_country`, `ebay_plus`,`status`,`mearge`,`tacking_no`,`shipping_cost`, `sku2`) VALUES ('$company_id','$channel','$sales_r_no_with_company','$data1','$data2','$data3','$data4','$data5','$data6','$data7','$data8','$data9','$data10','$data11','$data12','$data13','$data14','$data15','$data16','$data17','$data18','$data19','$data20','$data21','$data22','$data23','$data24','$data25','$data26','$data27','$data28','$data29','$data30','$data31','$data32','$data33','$data34','$data35','$data36','$data37','$data38','$data39','$data41','$data42','$data43','$data44','$data45','$data46','$data47','$data48','$data49','$data50','$data51','$data52','new','','$data53','$data54' ,'$data13')");
+
+							$id = mysqli_insert_id($conn);
+
+							if($data4 != '') {
+								array_push($print_ids, $id);
+							}
+
+							if(!empty($data2) and empty($data12)) {
+								mysqli_query($conn,"update `order_data` set `quantity`='' where `id`='$id'"); 
+							}
+
+							$order_id11 = mysqli_insert_id($conn);
+
+						} else {
+							
+							echo 'skip record_id-'.$data0.'-company_id-'.$company_id;
+							echo '<br><br>';
+
+						}
+					}
+				} else { 
 			
 				//uploading amazon data	
 					
@@ -164,18 +190,15 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				else{
 
 					$check_o_id = mysqli_query($conn,"select * from `order_data` where `sales_r_no`='$order_id'");
-					$data_ceck_o = mysqli_fetch_assoc($check_o_id);
-					if($data_ceck_o['mearge']=='hide'){}
-					
-					else{	
+					$data_ceck_o = mysqli_fetch_assoc($check_o_id);  
+					if($data_ceck_o['mearge']=='hide') {  } else {	
 						
 						 
-						if($data_ceck_o['sales_r_no'] == $order_id){
+						if($data_ceck_o['sales_r_no'] == $order_id) {
 							
 							mysqli_query($conn,"INSERT INTO `order_data`( `company_id`,`channel_id`, `sales_r_no`, `item_no`, `paid_on_date`, `sale_date`, `reporting_date`, `promise_date`, `days_past_promise`, `sku`, `item_title`, `quantity_purchased`, `quantity_shipped`, `quantity`, `delivery_service`, `recipient_name`,`is_business_order`, `purchase_order_no`, `price_designation`,`status`,`sale_price`,`tacking_no`,`postage_packing`) VALUES ('$company_id','$channel','$order_id','$order_item_id','$purchase_date','$payments_date','$reporting_date','$promise_date','$days_past_promise','$sku','$product_name','$quantity_purchased','$quantity_shipped','$quantity_to_ship','$ship_service_level','$recipient_name','$is_business_order','$purchase_order_no','$price_designation','new','$saleprice','$trackingno','$postage_packing')");
 						
-						}
-						else{
+						} else {
 						
 							mysqli_query($conn,"INSERT INTO `order_data`( `company_id`,`channel_id`, `sales_r_no`, `item_no`, `paid_on_date`, `sale_date`, `reporting_date`, `promise_date`, `days_past_promise`, `buyer_email`, `buyer_name`, `buyer_phone`, `sku`, `item_title`, `quantity_purchased`, `quantity_shipped`, `quantity`, `delivery_service`, `recipient_name`,`buyer_address_1`, `buyer_address_2`, `buyer_town`, `buyer_county`, `buyer_postcode`, `buyer_country`, `is_business_order`, `purchase_order_no`, `price_designation`,`status`,`sale_price`,`tacking_no`,`postage_packing`) VALUES ('$company_id','$channel','$order_id','$order_item_id','$purchase_date','$payments_date','$reporting_date','$promise_date','$days_past_promise','$buyer_email','$buyer_name','$buyer_number','$sku','$product_name','$quantity_purchased','$quantity_shipped','$quantity_to_ship','$ship_service_level','$recipient_name','$ship_address','$ship_address2','$ship_city','$ship_state','$ship_postal_code','$ship_country','$is_business_order','$purchase_order_no','$price_designation','new','$saleprice','$trackingno','$postage_packing')");
 						}
@@ -184,11 +207,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				}
 			}
         }
-	}
-
-
-
-	
+	}	
 
 
 	// Request to generate pdf
@@ -302,9 +321,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 		curl_close ($ch);
 
-	}
-
-
+	}	
 
 	echo "<script>window.location='../c_order_view.php'</script>";
 

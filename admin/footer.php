@@ -55,7 +55,7 @@
             </div>
         </div>
       END PRE-FOOTER 
-        <!-- BEGIN INNER FOOTER 
+        BEGIN INNER FOOTER 
         <div class="page-footer">
             <div class="container-fluid"> 2018 &copy; demo.appzito.com by Appzito.
                 <a href="http://appzito.com"  target="_blank">AppZito</a>

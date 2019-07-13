@@ -30,7 +30,7 @@ while($data_mail  = mysqli_fetch_assoc($mail_data)) {
 	 $sales_r_no11= $data_mail['sales_r_no'];
 	$order_data = mysqli_query($conn,"select * from `order_data` where `id`='$main_order_id' order by id asc");
 	$data_order= mysqli_fetch_assoc($order_data);
-	  $buyer_email = 'vijay_pl@ymail.com'; //$data_order['buyer_email'];
+	  $buyer_email = 'nomanaadma@gmail.com'; //'vijay_pl@ymail.com'; //$data_order['buyer_email'];
 	 $buyer_name = $data_order['buyer_name'];
 	 $order_no = $data_order['sales_r_no'];
 	

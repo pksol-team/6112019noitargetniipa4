@@ -25,5 +25,6 @@ while($data_betch1 = mysqli_fetch_assoc($ddd))
 						  
 ?>
 <option value="<?php echo $betch1; ?>"><?php echo $betch1; ?></option></select>
+	 <?php } ?>
 </div>
 
