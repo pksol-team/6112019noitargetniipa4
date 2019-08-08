@@ -1061,7 +1061,7 @@
 								
 								$.ajax({
 									type: "post",
-									url: "/admin/update_sku.php",
+									url: "/orders/admin/update_sku.php",
 									data: {	
 										id: $this.attr('data-id'),
 										sku: input_value
@@ -1086,7 +1086,7 @@
 
 							$.ajax({
 								type: "post",
-								url: "/admin/update_courier.php",
+								url: "/orders/admin/update_courier.php",
 								data: {
 									id: $this.attr('data-id'),
 									courier: udpated_courier

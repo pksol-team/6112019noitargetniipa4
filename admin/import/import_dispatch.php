@@ -1,6 +1,6 @@
-﻿﻿<?php
+<?php
 
-error_reporting(0);
+// error_reporting(0);
 include 'config.php';
 
 $print_ids = [];
@@ -207,52 +207,47 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 				}
 			}
         }
-	}	
+	}
 
+// 	// Request to generate pdf
+// 	$ch = curl_init();
 
-	// Request to generate pdf
-	$ch = curl_init();
+// 	curl_setopt($ch, CURLOPT_URL, "https://shopping-hub.in/orders/admin/invoicedom.php?type=curl");
+// 	curl_setopt($ch, CURLOPT_POST, 1);
 
-	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/invoicedom.php?type=curl");
-	curl_setopt($ch, CURLOPT_POST, 1);
+// 	// In real life you should use something like:
+// 	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $print_ids)));
 
-	// In real life you should use something like:
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('company_order_id' => $print_ids)));
+// 	// Receive server response ...
+// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-	// Receive server response ...
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 	$server_output = curl_exec($ch);
 
-	$server_output = curl_exec($ch);
-
-	curl_close ($ch);
-
-
+// 	curl_close ($ch);
 
 
 
 
 
-	// request to send mails
-	$ch = curl_init();
+// 	// request to send mails
+// 	$ch = curl_init();
 
-	curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/mail_it.php?type=curl");
-	curl_setopt($ch, CURLOPT_POST, 1);
+// 	curl_setopt($ch, CURLOPT_URL, "https://shopping-hub.in/orders/admin/mail_it.php?type=curl");
+// 	curl_setopt($ch, CURLOPT_POST, 1);
 
-	// In real life you should use something like:
-	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('include_ids' => $print_ids)));
+// 	// In real life you should use something like:
+// 	curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query(array('include_ids' => $print_ids)));
 
-	// Receive server response ...
-	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// 	// Receive server response ...
+// 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-	$server_output = curl_exec($ch);
-
-	curl_close ($ch);
-
-
-
-
-
-
+// 	$server_output = curl_exec($ch);
+	
+// 	curl_close ($ch);
+	
+	
+	
+	
 
 
 	// For merge task
@@ -308,7 +303,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 		$ch = curl_init();
 
-		curl_setopt($ch, CURLOPT_URL, "http://4-api.test/admin/meargesubmit.php?status=".$status."&type=curl");
+		curl_setopt($ch, CURLOPT_URL, "https://shopping-hub.in/orders/admin/meargesubmit.php?status=".$status."&type=curl");
 		curl_setopt($ch, CURLOPT_POST, 1);
 
 		// In real life you should use something like:
@@ -323,7 +318,7 @@ $datachannel = mysqli_fetch_assoc($channeldata);
 
 	}	
 
-	echo "<script>window.location='../c_order_view.php'</script>";
+    echo "<script>window.location='../c_order_view.php'</script>";
 
 
 ?>
